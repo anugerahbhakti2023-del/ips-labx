@@ -20,18 +20,19 @@ canvas {
   z-index: -1;
 }
 
-/* HERO */
 .hero {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  perspective: 1000px;
 }
 
 .logo {
   width: 350px;
-  filter: drop-shadow(0 0 20px cyan);
+  transition: transform 0.15s;
+  filter: drop-shadow(0 0 25px cyan);
 }
 
 /* BUTTON */
@@ -42,7 +43,6 @@ canvas {
   border: none;
   background: cyan;
   cursor: pointer;
-  font-size: 16px;
 }
 
 /* MODAL */
@@ -82,7 +82,7 @@ input {
 <canvas id="canvas"></canvas>
 
 <div class="hero">
-  <img src="logo.png" class="logo">
+  <img src="logo.png" class="logo" id="logo">
   <h1>IPS LABX</h1>
   <button class="btn" id="btnMulai">Mulai</button>
 </div>
@@ -98,7 +98,6 @@ input {
 </div>
 
 <script>
-/* ===== PARTICLE ===== */
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -112,9 +111,10 @@ document.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY;
 });
 
+/* PARTICLES */
 let particles = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 120; i++) {
   particles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
@@ -126,8 +126,10 @@ for (let i = 0; i < 100; i++) {
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  particles.forEach(p => {
+  for (let i = 0; i < particles.length; i++) {
+    let p = particles[i];
 
+    // interaksi mouse
     let dx = mouse.x - p.x;
     let dy = mouse.y - p.y;
     let dist = Math.sqrt(dx*dx + dy*dy);
@@ -140,21 +142,49 @@ function animate() {
     p.x += p.vx;
     p.y += p.vy;
 
+    // gambar titik
     ctx.beginPath();
     ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
     ctx.fillStyle = "cyan";
     ctx.fill();
 
+    // NETWORK EFFECT (GARIS)
+    for (let j = i; j < particles.length; j++) {
+      let p2 = particles[j];
+      let dx2 = p.x - p2.x;
+      let dy2 = p.y - p2.y;
+      let dist2 = Math.sqrt(dx2*dx2 + dy2*dy2);
+
+      if (dist2 < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(0,255,255,0.2)";
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+    }
+
+    // bounce
     if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
     if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-  });
+  }
 
   requestAnimationFrame(animate);
 }
 
 animate();
 
-/* ===== MODAL FIX ===== */
+/* LOGO 3D */
+const logo = document.getElementById("logo");
+
+document.addEventListener("mousemove", (e) => {
+  let x = (window.innerWidth / 2 - e.clientX) / 20;
+  let y = (window.innerHeight / 2 - e.clientY) / 20;
+
+  logo.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+});
+
+/* MODAL */
 const btn = document.getElementById("btnMulai");
 const modal = document.getElementById("modal");
 
@@ -162,7 +192,6 @@ btn.addEventListener("click", () => {
   modal.style.display = "flex";
 });
 
-/* klik luar modal = close */
 window.addEventListener("click", (e) => {
   if (e.target === modal) {
     modal.style.display = "none";
