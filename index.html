@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Laboratorium Digital IPS</title>
 
-<!-- SUPABASE CDN -->
-<script src="https://qiyexewquvbtfcyjiomh.supabase.co"></script>
-
 <style>
 body {
   margin: 0;
@@ -28,8 +25,21 @@ body {
   z-index: 1000;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+}
+
 .logo img {
   height: 42px;
+  width: auto;
+}
+
+/* NAV LINKS */
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
 }
 
 /* BUTTON */
@@ -60,7 +70,15 @@ body {
   padding: 60px;
 }
 
-.hero h1 { font-size: 42px; }
+.hero h1 {
+  font-size: 42px;
+  margin: 10px 0;
+}
+
+.hero h4 {
+  margin: 0;
+  opacity: 0.8;
+}
 
 /* FEATURES */
 .features {
@@ -73,6 +91,195 @@ body {
   background: white;
   padding: 20px;
   border-radius: 16px;
+  width: 250px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* DASHBOARD */
+.dashboard {
+  display: flex;
+}
+
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #1e293b;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin: 15px 0;
+  cursor: pointer;
+}
+
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* PROGRESS */
+.bar {
+  width: 300px;
+  height: 10px;
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.fill {
+  width: 70%;
+  height: 100%;
+  background: #10b981;
+  border-radius: 10px;
+}
+
+/* GRID */
+.grid {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* LAB */
+.lab {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">
+    <img src="logo.png" alt="Lab IPS Logo">
+  </div>
+
+  <div>
+    <a href="#">Home</a>
+    <a href="#">Fitur</a>
+    <a href="#">Tentang</a>
+    <button class="btn-outline">Login</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <h4>SMP / SMA IPS Digital Lab</h4>
+    <h1>Laboratorium Digital IPS</h1>
+    <p>Belajar sosial secara interaktif, simulatif, dan menyenangkan</p>
+    <button class="btn-primary">Mulai Belajar</button>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="card">
+    <h3>🌍 Peta Interaktif</h3>
+    <p>Eksplorasi wilayah ASEAN</p>
+  </div>
+
+  <div class="card">
+    <h3>🧪 Simulasi Sosial</h3>
+    <p>Belajar melalui eksperimen</p>
+  </div>
+
+  <div class="card">
+    <h3>🎮 Game Edukasi</h3>
+    <p>Belajar sambil bermain</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <h3>Menu</h3>
+    <ul>
+      <li>🏠 Dashboard</li>
+      <li>📚 Modul</li>
+      <li>🧪 Lab</li>
+      <li>📝 Evaluasi</li>
+    </ul>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <h2>Selamat datang 👋</h2>
+
+    <p>Progress Belajar</p>
+    <div class="bar">
+      <div class="fill"></div>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+      <div class="card">🌏 ASEAN</div>
+      <div class="card">👥 Sosial</div>
+      <div class="card">💰 Ekonomi</div>
+      <div class="card">🕰️ Sejarah</div>
+    </div>
+
+    <!-- LAB SIMULATION -->
+    <div class="lab">
+      <h3>🧪 Simulasi Ekonomi</h3>
+
+      <p>Harga: <span id="harga">5000</span></p>
+      <input type="range" min="1000" max="10000" value="5000" id="sliderHarga">
+
+      <p>Produksi: <span id="produksi">100</span></p>
+      <input type="range" min="10" max="500" value="100" id="sliderProduksi">
+
+      <br><br>
+      <button class="btn-primary" onclick="hitung()">Jalankan Simulasi</button>
+
+      <p id="hasil"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+function hitung() {
+  let harga = document.getElementById("sliderHarga").value;
+  let produksi = document.getElementById("sliderProduksi").value;
+
+  document.getElementById("harga").innerText = harga;
+  document.getElementById("produksi").innerText = produksi;
+
+  let permintaan = 10000 / harga * produksi;
+
+  if (permintaan < 100) {
+    document.getElementById("hasil").innerText =
+      "Permintaan rendah karena harga tinggi";
+  } else {
+    document.getElementById("hasil").innerText =
+      "Permintaan meningkat karena harga sesuai";
+  }
+}
+</script>
+
+</body>
+</html>  border-radius: 16px;
   width: 250px;
   text-align: center;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
