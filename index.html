@@ -7,12 +7,13 @@
 <style>
 body {
   margin: 0;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: #020617;
   color: white;
   overflow: hidden;
 }
 
+/* CANVAS */
 canvas {
   position: fixed;
   top: 0;
@@ -20,35 +21,47 @@ canvas {
   z-index: -1;
 }
 
+/* HERO */
 .hero {
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  text-align: center;
   perspective: 1000px;
 }
 
-/* LOGO UPGRADE */
+/* LOGO */
 .logo {
   width: 550px;
   max-width: 95%;
-  transition: transform 0.15s;
-  filter: drop-shadow(0 0 35px cyan);
+  transition: transform 0.15s ease;
+  filter: drop-shadow(0 0 40px rgba(0,255,255,0.7));
 }
 
+/* TEXT */
 h1 {
   margin-top: 20px;
+  font-size: 42px;
+  letter-spacing: 2px;
 }
 
 /* BUTTON */
 .btn {
   margin-top: 20px;
-  padding: 12px 25px;
-  border-radius: 10px;
+  padding: 12px 28px;
+  border-radius: 12px;
   border: none;
-  background: cyan;
+  background: linear-gradient(45deg, cyan, #3b82f6);
+  color: white;
   cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.08);
 }
 
 /* MODAL */
@@ -61,15 +74,16 @@ h1 {
   display: none;
   justify-content: center;
   align-items: center;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0,0,0,0.85);
 }
 
 .modal-content {
   background: #0F172A;
-  padding: 25px;
+  padding: 30px;
   border-radius: 15px;
   width: 300px;
   text-align: center;
+  box-shadow: 0 0 20px rgba(0,255,255,0.3);
 }
 
 input {
@@ -80,7 +94,6 @@ input {
   border: none;
 }
 </style>
-
 </head>
 
 <body>
@@ -90,10 +103,11 @@ input {
 <div class="hero">
   <img src="logo.png" class="logo" id="logo">
   <h1>IPS LABX</h1>
+  <p>Laboratorium Digital IPS Interaktif</p>
   <button class="btn" id="btnMulai">Mulai</button>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL LOGIN -->
 <div class="modal" id="modal">
   <div class="modal-content">
     <h2>Login / Daftar</h2>
@@ -117,77 +131,46 @@ document.addEventListener("mousemove", (e) => {
   mouse.y = e.clientY;
 });
 
-/* PARTICLES */
+/* PARTICLES (LEBIH BANYAK + SMOOTH) */
 let particles = [];
 
-for (let i = 0; i < 120; i++) {
+for (let i = 0; i < 250; i++) {
   particles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: Math.random() - 0.5,
-    vy: Math.random() - 0.5
+    vx: (Math.random() - 0.5) * 0.7,
+    vy: (Math.random() - 0.5) * 0.7,
+    size: Math.random() * 2 + 1
   });
 }
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  let mouseRadius = 140;
+  particles.forEach(p => {
 
-  for (let i = 0; i < particles.length; i++) {
-    let p = particles[i];
+    let dx = mouse.x - p.x;
+    let dy = mouse.y - p.y;
+    let dist = Math.sqrt(dx * dx + dy * dy);
 
-    let dxMouse = p.x - mouse.x;
-    let dyMouse = p.y - mouse.y;
-    let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+    // efek tarik halus
+    if (dist < 120) {
+      p.x += dx * 0.01;
+      p.y += dy * 0.01;
+    }
 
-    // gerak normal
     p.x += p.vx;
     p.y += p.vy;
 
-    // tarik ke mouse
-    if (distMouse < 120) {
-      p.x += (mouse.x - p.x) * 0.02;
-      p.y += (mouse.y - p.y) * 0.02;
-    }
-
-    // === NETWORK HANYA DI AREA MOUSE ===
-    if (distMouse < mouseRadius) {
-
-      for (let j = i; j < particles.length; j++) {
-        let p2 = particles[j];
-
-        let dx = p.x - p2.x;
-        let dy = p.y - p2.y;
-        let dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < 90) {
-          ctx.beginPath();
-          ctx.strokeStyle = "rgba(0,255,255,0.6)";
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
-      }
-
-      // highlight
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-      ctx.fillStyle = "white";
-      ctx.fill();
-
-    } else {
-      // normal
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = "cyan";
-      ctx.fill();
-    }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(0,255,255,0.8)";
+    ctx.fill();
 
     // bounce
     if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
     if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-  }
+  });
 
   requestAnimationFrame(animate);
 }
