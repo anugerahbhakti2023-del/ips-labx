@@ -775,13 +775,19 @@ try {
     });
   }
 
-  // --- MODIFIKASI FUNGSI LOGIN (EFEK ALARM SCI-FI) ---
+// --- MODIFIKASI FUNGSI LOGIN (TUTUP MODAL & ALARM FULL LAYAR) ---
   if (btnMasukSistem) {
     btnMasukSistem.addEventListener("click", async () => {
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
 
-      if(!email || !password) return alert("Harap isi Email dan Sandi!");
+      // Jika input kosong, ubah teks tombol saja (jangan pakai alert)
+      if(!email || !password) {
+        btnMasukSistem.innerText = "⚠️ ISI EMAIL DAN SANDI!";
+        setTimeout(() => btnMasukSistem.innerText = "Masuk Sistem", 2000);
+        return;
+      }
+      
       btnMasukSistem.innerText = "Memverifikasi...";
 
       const { data, error } = await dbClient.auth.signInWithPassword({
@@ -789,32 +795,27 @@ try {
       });
 
       if (error) {
-        // --- JIKA PASSWORD SALAH, AKTIFKAN ALARM TOTAL! ---
-        isAlarmActive = true; // Sinkronisasi jam & partikel
-        document.body.classList.add('system-alarm'); // Aktifkan CSS merah total
-        btnMasukSistem.innerText = "AKSES DITOLAK!"; // Ubah teks tombol
+        // 1. HAPUS KODE alert() DAN LANGSUNG TUTUP MODAL (KEMBALI KE BERANDA)
+        document.getElementById("modal").style.display = "none";
 
-        // Tambahkan teks peringatan di modal (ala hacker)
-        document.querySelector('#form-login .input-group label').innerText = "⚠️ ERR_LOGIN: KREDENSIAL ILEGAL";
-        document.querySelector('#form-login .input-group:last-of-type label').innerText = "⚠️ ERR_SANDI: VERIFIKASI GAGAL";
+        // 2. AKTIFKAN ALARM MERAH TOTAL
+        isAlarmActive = true; 
+        document.body.classList.add('system-alarm'); 
 
-        // Matikan alarm secara otomatis setelah 3 detik
+        // 3. MATIKAN ALARM SETELAH 3 DETIK (Kembali Normal)
         setTimeout(() => {
           isAlarmActive = false;
           document.body.classList.remove('system-alarm');
-          btnMasukSistem.innerText = "Masuk Sistem";
-          // Reset teks label normal
-          document.querySelector('#form-login .input-group label').innerText = "> EMAIL PENELITI";
-          document.querySelector('#form-login .input-group:last-of-type label').innerText = "> KATA SANDI";
+          btnMasukSistem.innerText = "Masuk Sistem"; // Reset tombol
         }, 3000);
 
       } else {
-        alert("AKSES DITERIMA. Mengalihkan...");
+        // Jika berhasil, langsung alihkan tanpa alert
+        btnMasukSistem.innerText = "AKSES DITERIMA...";
         window.location.href = "dashboard.html"; 
       }
     });
   }
-
 } catch (err) { console.error("Supabase tidak aktif:", err.message); }
 </script>
 
