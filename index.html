@@ -6,30 +6,15 @@
 <title>IPS LABX - Laboratorium Ilmu Pengetahuan Sosial</title>
 
 <style>
-  /* Mengatur Scroll yang mulus */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
+  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: 'Courier New', Courier, monospace; 
     background: #020617;
     color: white;
     overflow-x: hidden; 
   }
-
-  canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
+  canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
   /* EFEK KLIK (RIPPLE) */
   .click-ripple {
@@ -42,7 +27,6 @@
     z-index: 9999;
     box-shadow: 0 0 10px cyan, inset 0 0 10px cyan;
   }
-
   @keyframes rippleAnim {
     0% { width: 0; height: 0; opacity: 1; }
     100% { width: 80px; height: 80px; opacity: 0; }
@@ -66,441 +50,95 @@
     backdrop-filter: blur(5px);
   }
 
+  .custom-audio-btn {
+    cursor: pointer;
+    color: #eab308; /* Warna kuning agar terlihat bisa diklik */
+    transition: 0.3s;
+  }
+  .custom-audio-btn:hover { color: white; text-shadow: 0 0 10px #eab308; }
+
   /* NAVBAR */
   nav {
-    position: fixed;
-    top: 35px; 
-    width: 100%;
-    padding: 15px 50px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), transparent);
-    z-index: 100;
+    position: fixed; top: 35px; width: 100%; padding: 15px 50px;
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), transparent); z-index: 100;
   }
+  nav .brand { font-size: 1.5rem; font-weight: bold; color: white; text-shadow: 0 0 10px cyan; font-family: Arial, sans-serif; }
+  nav ul { list-style: none; display: flex; gap: 30px; }
+  nav ul li a { color: #94A3B8; text-decoration: none; font-weight: bold; transition: all 0.3s; font-family: Arial, sans-serif; }
+  nav ul li a:hover { color: cyan; text-shadow: 0 0 8px cyan; }
 
-  nav .brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
-    text-shadow: 0 0 10px cyan;
-    font-family: Arial, sans-serif;
-  }
-
-  nav ul {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-  }
-
-  nav ul li a {
-    color: #94A3B8;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.3s;
-    font-family: Arial, sans-serif;
-  }
-
-  nav ul li a:hover {
-    color: cyan;
-    text-shadow: 0 0 8px cyan;
-  }
-
-  /* HERO SECTION (BERANDA) */
+  /* HERO SECTION */
   .hero {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    perspective: 1000px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-    padding: 0 20px;
+    height: 100vh; display: flex; justify-content: center; align-items: center; flex-direction: column;
+    perspective: 1000px; text-align: center; font-family: Arial, sans-serif; padding: 0 20px;
   }
-
-  .logo {
-    width: 450px; 
-    max-width: 80%;
-    transition: transform 0.1s ease-out;
-    filter: drop-shadow(0 0 30px cyan);
-  }
-
-  h1 {
-    font-size: 3.5rem;
-    margin-top: 20px;
-    margin-bottom: 5px;
-    letter-spacing: 3px;
-    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-  }
-
-  .subtitle {
-    color: #94A3B8;
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
-  }
+  .logo { width: 450px; max-width: 80%; transition: transform 0.1s ease-out; filter: drop-shadow(0 0 30px cyan); }
+  h1 { font-size: 3.5rem; margin-top: 20px; margin-bottom: 5px; letter-spacing: 3px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
+  .subtitle { color: #94A3B8; margin-bottom: 30px; font-size: 1.1rem; letter-spacing: 1px; }
 
   /* BUTTON */
   .btn {
-    padding: 12px 35px;
-    border-radius: 4px;
-    border: 1px solid cyan;
-    background: rgba(0, 255, 255, 0.1);
-    color: cyan;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'Courier New', Courier, monospace;
+    padding: 12px 35px; border-radius: 4px; border: 1px solid cyan; background: rgba(0, 255, 255, 0.1);
+    color: cyan; font-weight: bold; font-size: 1rem; cursor: pointer; transition: all 0.3s;
+    text-transform: uppercase; letter-spacing: 2px; font-family: 'Courier New', Courier, monospace;
   }
-
-  .btn:hover {
-    background: cyan;
-    color: #020617;
-    box-shadow: 0 0 20px cyan;
-  }
+  .btn:hover { background: cyan; color: #020617; box-shadow: 0 0 20px cyan; }
 
   /* CONTENT SECTIONS */
-  .content-section {
-    min-height: 100vh;
-    padding: 100px 20px 50px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-
-  .section-title {
-    font-family: Arial, sans-serif;
-    font-size: 2.5rem;
-    color: white;
-    text-shadow: 0 0 10px cyan;
-    margin-bottom: 40px;
-    text-align: center;
-    border-bottom: 2px dashed rgba(0, 255, 255, 0.3);
-    padding-bottom: 10px;
-    width: 100%;
-  }
+  .content-section { min-height: 100vh; padding: 100px 20px 50px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 1000px; margin: 0 auto; }
+  .section-title { font-family: Arial, sans-serif; font-size: 2.5rem; color: white; text-shadow: 0 0 10px cyan; margin-bottom: 40px; text-align: center; border-bottom: 2px dashed rgba(0, 255, 255, 0.3); padding-bottom: 10px; width: 100%; }
 
   /* PANEL DATA CP IPS */
-  .data-panel {
-    background: rgba(2, 6, 23, 0.8);
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05);
-    width: 100%;
-    line-height: 1.6;
-    color: #94A3B8;
-  }
+  .data-panel { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(0, 255, 255, 0.3); padding: 30px; border-radius: 8px; box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05); width: 100%; line-height: 1.6; color: #94A3B8; }
+  .data-panel h3 { color: cyan; margin-bottom: 15px; font-family: Arial, sans-serif; }
+  .data-panel p, .data-panel ul { margin-bottom: 15px; }
+  .data-panel ul { margin-left: 20px; }
 
-  .data-panel h3 {
-    color: cyan;
-    margin-bottom: 15px;
-    font-family: Arial, sans-serif;
-  }
-
-  .data-panel p {
-    margin-bottom: 15px;
-  }
-
-  .data-panel ul {
-    margin-left: 20px;
-    margin-bottom: 15px;
-  }
-
-  /* KARTU KREATOR (TENTANG) */
-  .creator-card {
-    display: flex;
-    background: rgba(2, 6, 23, 0.8);
-    border: 1px solid cyan;
-    border-radius: 8px;
-    padding: 30px;
-    gap: 30px;
-    align-items: center;
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .creator-card::before {
-    content: 'ID-KREATOR';
-    position: absolute;
-    top: 10px;
-    right: -20px;
-    transform: rotate(45deg);
-    background: cyan;
-    color: #020617;
-    padding: 2px 30px;
-    font-weight: bold;
-    font-size: 0.8rem;
-  }
-
-  .creator-photo {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-    border: 2px solid cyan;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
-    object-fit: cover;
-  }
-
-  .creator-info h3 {
-    color: white;
-    font-size: 1.8rem;
-    margin-bottom: 5px;
-    text-shadow: 0 0 5px cyan;
-    font-family: Arial, sans-serif;
-  }
-
-  .creator-info h4 {
-    color: cyan;
-    font-size: 1rem;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-  }
-
-  .creator-info p {
-    color: #94A3B8;
-    line-height: 1.5;
-  }
+  /* KARTU KREATOR */
+  .creator-card { display: flex; background: rgba(2, 6, 23, 0.8); border: 1px solid cyan; border-radius: 8px; padding: 30px; gap: 30px; align-items: center; width: 100%; position: relative; overflow: hidden; }
+  .creator-card::before { content: 'ID-KREATOR'; position: absolute; top: 10px; right: -20px; transform: rotate(45deg); background: cyan; color: #020617; padding: 2px 30px; font-weight: bold; font-size: 0.8rem; }
+  .creator-photo { width: 150px; height: 150px; border-radius: 10px; border: 2px solid cyan; box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); object-fit: cover; }
+  .creator-info h3 { color: white; font-size: 1.8rem; margin-bottom: 5px; text-shadow: 0 0 5px cyan; font-family: Arial, sans-serif; }
+  .creator-info h4 { color: cyan; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; }
+  .creator-info p { color: #94A3B8; line-height: 1.5; }
 
   /* MODAL HOLOGRAM */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-  }
-
-  .modal-content {
-    background: rgba(2, 6, 23, 0.95);
-    padding: 40px;
-    width: 400px;
-    border: 1px solid cyan;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .scanline {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), transparent);
-    opacity: 0.5;
-    animation: scan 3s linear infinite;
-    pointer-events: none;
-  }
-
-  @keyframes scan {
-    0% { top: -50px; }
-    100% { top: 100%; }
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: cyan;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: color 0.3s;
-    z-index: 10;
-  }
-
-  .close-btn:hover {
-    color: white;
-    text-shadow: 0 0 10px white;
-  }
-
-  .tabs {
-    display: flex;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-  }
-
-  .tab-btn {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: #94A3B8;
-    padding: 10px;
-    cursor: pointer;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: 0.3s;
-  }
-
-  .tab-btn.active {
-    color: cyan;
-    border-bottom: 2px solid cyan;
-    text-shadow: 0 0 5px cyan;
-  }
-
-  .form-container {
-    display: none;
-  }
-
-  .form-container.active {
-    display: block;
-    animation: fadeIn 0.4s ease-in-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .input-group {
-    margin-bottom: 15px;
-    text-align: left;
-  }
-
-  .input-group label {
-    display: block;
-    font-size: 0.8rem;
-    color: cyan;
-    margin-bottom: 5px;
-  }
-
-  .modal-content input {
-    width: 100%;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(0, 255, 255, 0.3);
-    color: white;
-    outline: none;
-    font-family: 'Courier New', Courier, monospace;
-    transition: 0.3s;
-  }
-
-  .modal-content input:focus {
-    border-color: cyan;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
-  }
-
-  .modal-content .btn {
-    width: 100%;
-    margin-top: 10px;
-  }
+  .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000; }
+  .modal-content { background: rgba(2, 6, 23, 0.95); padding: 40px; width: 400px; border: 1px solid cyan; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); position: relative; overflow: hidden; }
+  .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 50px; background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), transparent); opacity: 0.5; animation: scan 3s linear infinite; pointer-events: none; }
+  @keyframes scan { 0% { top: -50px; } 100% { top: 100%; } }
+  .close-btn { position: absolute; top: 15px; right: 20px; color: cyan; font-size: 1.5rem; cursor: pointer; transition: color 0.3s; z-index: 10; }
+  .close-btn:hover { color: white; text-shadow: 0 0 10px white; }
+  .tabs { display: flex; margin-bottom: 25px; border-bottom: 1px solid rgba(0, 255, 255, 0.3); }
+  .tab-btn { flex: 1; background: transparent; border: none; color: #94A3B8; padding: 10px; cursor: pointer; font-family: 'Courier New', Courier, monospace; font-weight: bold; font-size: 1rem; transition: 0.3s; }
+  .tab-btn.active { color: cyan; border-bottom: 2px solid cyan; text-shadow: 0 0 5px cyan; }
+  .form-container { display: none; }
+  .form-container.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .input-group { margin-bottom: 15px; text-align: left; }
+  .input-group label { display: block; font-size: 0.8rem; color: cyan; margin-bottom: 5px; }
+  .modal-content input { width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 255, 255, 0.3); color: white; outline: none; font-family: 'Courier New', Courier, monospace; transition: 0.3s; }
+  .modal-content input:focus { border-color: cyan; box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); }
+  .modal-content .btn { width: 100%; margin-top: 10px; }
 
   /* MODE ALARM SCI-FI */
-  .alarm-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 0, 0, 0.4); 
-    z-index: 999; 
-    display: none; 
-    opacity: 0;
-    pointer-events: none; 
-  }
-
-  @keyframes alarmPulse {
-    0% { opacity: 0.1; }
-    50% { opacity: 0.7; }
-    100% { opacity: 0.1; }
-  }
-
-  body.system-alarm .alarm-overlay {
-    display: block;
-    animation: alarmPulse 0.8s infinite;
-  }
-
-  @keyframes textFlashRed {
-    0%, 100% { color: red; text-shadow: 0 0 10px red; }
-    50% { color: white; text-shadow: none; }
-  }
-
-  body.system-alarm .status-bar,
-  body.system-alarm nav .brand,
-  body.system-alarm .section-title,
-  body.system-alarm .data-panel h3,
-  body.system-alarm .close-btn,
-  body.system-alarm .tab-btn.active,
-  body.system-alarm .input-group label {
-    color: red !important;
-    border-color: red !important;
-    text-shadow: 0 0 10px red !important;
-  }
-  
-  body.system-alarm .input-group label {
-    animation: textFlashRed 0.8s infinite;
-  }
-
-  body.system-alarm .modal-content {
-    border-color: red !important;
-    box-shadow: 0 0 50px red, inset 0 0 20px rgba(255, 0, 0, 0.3) !important;
-    animation: shake 0.3s; 
-  }
-
-  body.system-alarm .scanline {
-    background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.3), transparent) !important;
-  }
-
-  body.system-alarm .btn {
-    border-color: red !important;
-    color: red !important;
-    background: rgba(255, 0, 0, 0.1) !important;
-    box-shadow: 0 0 10px red !important;
-  }
-
-  body.system-alarm .btn:hover {
-    background: red !important;
-    color: white !important;
-    box-shadow: 0 0 20px red !important;
-  }
-
-  @keyframes shake {
-    0% { transform: translate(1px, 1px); }
-    10% { transform: translate(-1px, -2px); }
-    20% { transform: translate(-3px, 0px); }
-    30% { transform: translate(3px, 2px); }
-    40% { transform: translate(1px, -1px); }
-    50% { transform: translate(-1px, 2px); }
-    60% { transform: translate(-3px, 1px); }
-    70% { transform: translate(3px, 1px); }
-    80% { transform: translate(-1px, -1px); }
-    90% { transform: translate(1px, 2px); }
-    100% { transform: translate(1px, -2px); }
-  }
-
-  body.system-alarm #canvas {
-    opacity: 0.5;
-  }
+  .alarm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.4); z-index: 999; display: none; opacity: 0; pointer-events: none; }
+  @keyframes alarmPulse { 0% { opacity: 0.1; } 50% { opacity: 0.7; } 100% { opacity: 0.1; } }
+  body.system-alarm .alarm-overlay { display: block; animation: alarmPulse 0.8s infinite; }
+  @keyframes textFlashRed { 0%, 100% { color: red; text-shadow: 0 0 10px red; } 50% { color: white; text-shadow: none; } }
+  body.system-alarm .status-bar, body.system-alarm nav .brand, body.system-alarm .section-title, body.system-alarm .data-panel h3, body.system-alarm .close-btn, body.system-alarm .tab-btn.active, body.system-alarm .input-group label { color: red !important; border-color: red !important; text-shadow: 0 0 10px red !important; }
+  body.system-alarm .input-group label { animation: textFlashRed 0.8s infinite; }
+  body.system-alarm .modal-content { border-color: red !important; box-shadow: 0 0 50px red, inset 0 0 20px rgba(255, 0, 0, 0.3) !important; animation: shake 0.3s; }
+  body.system-alarm .scanline { background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.3), transparent) !important; }
+  body.system-alarm .btn { border-color: red !important; color: red !important; background: rgba(255, 0, 0, 0.1) !important; box-shadow: 0 0 10px red !important; }
+  body.system-alarm .btn:hover { background: red !important; color: white !important; box-shadow: 0 0 20px red !important; }
+  @keyframes shake { 0% { transform: translate(1px, 1px); } 10% { transform: translate(-1px, -2px); } 20% { transform: translate(-3px, 0px); } 30% { transform: translate(3px, 2px); } 40% { transform: translate(1px, -1px); } 50% { transform: translate(-1px, 2px); } 60% { transform: translate(-3px, 1px); } 70% { transform: translate(3px, 1px); } 80% { transform: translate(-1px, -1px); } 90% { transform: translate(1px, 2px); } 100% { transform: translate(1px, -2px); } }
+  body.system-alarm #canvas { opacity: 0.5; }
 
   @media screen and (max-width: 768px) {
-    .status-bar {
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.7rem;
-      padding: 5px;
-    }
-    nav {
-      top: 50px;
-      padding: 15px 20px;
-      flex-direction: column;
-      gap: 15px;
-    }
+    .status-bar { flex-direction: column; align-items: center; gap: 5px; font-size: 0.7rem; padding: 5px; }
+    nav { top: 50px; padding: 15px 20px; flex-direction: column; gap: 15px; }
     nav ul { gap: 15px; font-size: 0.85rem; }
     h1 { font-size: 2.2rem; }
     .creator-card { flex-direction: column; text-align: center; }
@@ -512,7 +150,11 @@
 <canvas id="canvas"></canvas>
 
 <div class="status-bar">
-  <div>SISTEM: <span style="color: white;">ONLINE</span> | KONEKSI SECURE</div>
+  <div>
+    SISTEM: <span style="color: white;">ONLINE</span> | 
+    <label for="uploadClick" class="custom-audio-btn">[GANTI SUARA KLIK]</label>
+    <input type="file" id="uploadClick" accept="audio/*" style="display: none;">
+  </div>
   <div id="live-datetime">--:--:-- | --/--/----</div>
 </div>
 
@@ -534,18 +176,15 @@
 
 <section class="content-section" id="modul">
   <h2 class="section-title">DATA MODUL IPS</h2>
-  
   <div class="data-panel">
     <h3>> CAPAIAN PEMBELAJARAN (FASE D)</h3>
     <p>Pada akhir fase D, peserta didik memahami ruang letak geografis dan pengaruhnya terhadap kondisi alam, serta kehidupan sosial, ekonomi, dan politik.</p>
-    
     <h3>> ELEMEN PEMAHAMAN</h3>
     <ul>
       <li><strong>Keruangan dan Konektivitas:</strong> Memahami letak geografis, cuaca, iklim, dan dampaknya.</li>
       <li><strong>Perkembangan Masyarakat:</strong> Mengidentifikasi dinamika sejarah dari masa praaksara hingga era modern.</li>
       <li><strong>Interaksi Sosial & Ekonomi:</strong> Menganalisis perilaku manusia dalam memenuhi kebutuhan hidup sehari-hari.</li>
     </ul>
-
     <p style="color: cyan; text-align: center; margin-top: 20px; font-weight: bold;">
       [ UNTUK MENGAKSES MATERI LENGKAP, SILAKAN LOGIN KE SISTEM ]
     </p>
@@ -554,20 +193,13 @@
 
 <section class="content-section" id="tentang">
   <h2 class="section-title">IDENTIFIKASI KREATOR</h2>
-  
   <div class="creator-card">
     <img src="fotoid.png" alt="Foto Kreator" class="creator-photo">
-    
     <div class="creator-info">
       <h3>Anugerah Bhakti Kuncoro</h3>
       <h4>Peneliti Utama / Web Developer</h4>
-      <p>
-        "Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran Ilmu Pengetahuan Sosial. Dengan pendekatan gamifikasi dan UI futuristik, saya berharap platform ini dapat meningkatkan minat eksplorasi data keruangan, sejarah, dan sosiologi bagi generasi digital."
-      </p>
-      <p style="margin-top: 10px; font-size: 0.85rem;">
-        > Sistem Diciptakan: 2026<br>
-        > Basis Operasi: Indonesia
-      </p>
+      <p>"Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran Ilmu Pengetahuan Sosial. Dengan pendekatan gamifikasi dan UI futuristik, saya berharap platform ini dapat meningkatkan minat eksplorasi data keruangan, sejarah, dan sosiologi bagi generasi digital."</p>
+      <p style="margin-top: 10px; font-size: 0.85rem;">> Sistem Diciptakan: 2026<br>> Basis Operasi: Indonesia</p>
     </div>
   </div>
 </section>
@@ -576,12 +208,10 @@
   <div class="modal-content">
     <div class="scanline"></div>
     <span class="close-btn" id="closeModal">&times;</span>
-    
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
       <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
     </div>
-
     <div id="form-login" class="form-container active">
       <div class="input-group">
         <label>> EMAIL PENELITI</label>
@@ -593,7 +223,6 @@
       </div>
       <button class="btn" id="btnMasukSistem">Masuk Sistem</button>
     </div>
-
     <div id="form-register" class="form-container">
       <div class="input-group">
         <label>> NAMA PENELITI</label>
@@ -609,19 +238,38 @@
       </div>
       <button class="btn" id="btnBuatKredensial">Buat Kredensial</button>
     </div>
-    
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ==========================================
-// AUDIO SYSTEM & CLICK EFFECTS
+// AUDIO SYSTEM & CUSTOM CLICK UPLOAD
 // ==========================================
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
+let customAudio = null;
+
+// Mengatur File Upload Suara Klik
+document.getElementById('uploadClick').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    customAudio = new Audio(url);
+    alert('Sistem Update: Suara klik berhasil diganti!');
+  }
+});
+
 function playClickSound() {
+  // Jika user sudah upload suara custom, gunakan itu
+  if (customAudio) {
+    customAudio.currentTime = 0; // Reset ke awal
+    customAudio.play().catch(e => console.log("Audio play di-block browser"));
+    return;
+  }
+  
+  // Jika belum, gunakan Synth Audio Bawaan
   if (audioCtx.state === 'suspended') audioCtx.resume();
   const osc = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
@@ -651,9 +299,12 @@ function playErrorSound() {
   osc.stop(audioCtx.currentTime + 0.3);
 }
 
-// Tambahkan Visual Ripple saat klik
+// Visual Ripple & Suara saat klik
 document.addEventListener('click', (e) => {
-  playClickSound(); // Memutar suara klik
+  // Cegah bunyi dobel kalau klik di label upload
+  if(e.target.tagName.toLowerCase() === 'label' && e.target.htmlFor === 'uploadClick') return;
+  
+  playClickSound();
 
   const ripple = document.createElement('div');
   ripple.className = 'click-ripple';
@@ -661,9 +312,7 @@ document.addEventListener('click', (e) => {
   ripple.style.top = e.clientY + 'px';
   document.body.appendChild(ripple);
   
-  setTimeout(() => {
-    ripple.remove();
-  }, 500);
+  setTimeout(() => { ripple.remove(); }, 500);
 });
 
 // Load Voice Assistent Data
@@ -676,10 +325,9 @@ window.speechSynthesis.onvoiceschanged = () => {
 // 1. LOGIKA UI, JAM & PARTIKEL
 // ==========================================
 let isAlarmActive = false;
-let isWarping = false; // Status untuk animasi warp saat login berhasil
+let isWarping = false; 
 
 try {
-  // A. LOGIKA JAM
   function updateDateTime() {
     const now = new Date();
     const time = now.toLocaleTimeString('id-ID', { hour12: false });
@@ -687,7 +335,6 @@ try {
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
-    
     if (isAlarmActive) {
       document.getElementById('live-datetime').style.color = 'red';
       document.getElementById('live-datetime').style.textShadow = '0 0 10px red';
@@ -699,7 +346,6 @@ try {
   setInterval(updateDateTime, 1000);
   updateDateTime();
 
-  // B. LOGIKA TAB MODAL
   window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
@@ -712,7 +358,6 @@ try {
     }
   };
 
-  // C. MODAL BUKA/TUTUP
   const btnMulai = document.getElementById("btnMulai");
   const modal = document.getElementById("modal");
   const closeModal = document.getElementById("closeModal");
@@ -720,7 +365,6 @@ try {
   if(closeModal) closeModal.addEventListener("click", () => modal.style.display = "none");
   window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 
-  // D. ANIMASI PARTIKEL (DENGAN EFEK WARP)
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -736,17 +380,10 @@ try {
   let particles = [];
   let particleCount = window.innerWidth < 768 ? 80 : 250; 
   for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      x: Math.random() * canvas.width, 
-      y: Math.random() * canvas.height,
-      z: Math.random() * 2, // Kedalaman untuk warp
-      vx: (Math.random() - 0.5) * 1.5, 
-      vy: (Math.random() - 0.5) * 1.5
-    });
+    particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, z: Math.random() * 2, vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5 });
   }
 
   function animate() {
-    // Jika sedang warp, buat jejak (trail effect), jika tidak clear utuh
     if(isWarping) {
         ctx.fillStyle = "rgba(2, 6, 23, 0.2)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -760,31 +397,15 @@ try {
 
     for (let i = 0; i < particles.length; i++) {
       let p = particles[i];
-      
       if (isWarping) {
-        // Efek Warp: Partikel menjauh dari tengah layar dengan cepat
-        let dxCenter = p.x - centerX;
-        let dyCenter = p.y - centerY;
-        p.x += dxCenter * 0.05;
-        p.y += dyCenter * 0.05;
-        p.z += 0.1;
-
-        // Reset partikel jika keluar layar saat warp
+        let dxCenter = p.x - centerX; let dyCenter = p.y - centerY;
+        p.x += dxCenter * 0.05; p.y += dyCenter * 0.05; p.z += 0.1;
         if(p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
-            p.x = centerX + (Math.random() - 0.5) * 10;
-            p.y = centerY + (Math.random() - 0.5) * 10;
-            p.z = 0;
+            p.x = centerX + (Math.random() - 0.5) * 10; p.y = centerY + (Math.random() - 0.5) * 10; p.z = 0;
         }
-
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x - dxCenter * 0.1, p.y - dyCenter * 0.1); // Garis Hyperspace
-        ctx.strokeStyle = "rgba(0, 255, 255, 0.8)";
-        ctx.lineWidth = p.z;
-        ctx.stroke();
-
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - dxCenter * 0.1, p.y - dyCenter * 0.1); 
+        ctx.strokeStyle = "rgba(0, 255, 255, 0.8)"; ctx.lineWidth = p.z; ctx.stroke();
       } else {
-        // Efek Normal
         p.x += p.vx; p.y += p.vy;
         let distMouse = 1000; 
         if (mouse.x !== null && mouse.y !== null) {
@@ -792,30 +413,22 @@ try {
           distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
           if (distMouse < 120) { p.x += (mouse.x - p.x) * 0.03; p.y += (mouse.y - p.y) * 0.03; }
         }
-        
         if (distMouse < mouseRadius) {
           for (let j = i; j < particles.length; j++) {
             let p2 = particles[j];
             let dx = p.x - p2.x; let dy = p.y - p2.y; let dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 90) {
               ctx.beginPath();
-              if (isAlarmActive) {
-                ctx.strokeStyle = `rgba(255, 0, 0, ${(1 - dist / 90) * 0.8})`; 
-              } else {
-                ctx.strokeStyle = `rgba(0, 255, 255, ${(1 - dist / 90) * 0.8})`; 
-              }
+              ctx.strokeStyle = isAlarmActive ? `rgba(255, 0, 0, ${(1 - dist / 90) * 0.8})` : `rgba(0, 255, 255, ${(1 - dist / 90) * 0.8})`; 
               ctx.lineWidth = 1; ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
             }
           }
           ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); 
-          ctx.fillStyle = isAlarmActive ? "rgba(255, 100, 100, 0.8)" : "white"; 
-          ctx.fill();
+          ctx.fillStyle = isAlarmActive ? "rgba(255, 100, 100, 0.8)" : "white"; ctx.fill();
         } else {
           ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); 
-          ctx.fillStyle = isAlarmActive ? "rgba(255, 0, 0, 0.4)" : "rgba(0, 255, 255, 0.4)"; 
-          ctx.fill();
+          ctx.fillStyle = isAlarmActive ? "rgba(255, 0, 0, 0.4)" : "rgba(0, 255, 255, 0.4)"; ctx.fill();
         }
-
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
       }
@@ -831,16 +444,13 @@ try {
 // ==========================================
 try {
   if (typeof window.supabase === 'undefined') { throw new Error("Library gagal dimuat."); }
-
   const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
   const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
-  
   const dbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
   const btnBuatKredensial = document.getElementById("btnBuatKredensial");
   const btnMasukSistem = document.getElementById("btnMasukSistem");
 
-  // REGISTER
   if (btnBuatKredensial) {
     btnBuatKredensial.addEventListener("click", async () => {
       const nama = document.getElementById("regNama").value;
@@ -848,16 +458,13 @@ try {
       const password = document.getElementById("regPassword").value;
       if(!email || !password || !nama) return alert("Harap isi semua data!");
       btnBuatKredensial.innerText = "Mendaftarkan...";
-      const { data, error } = await dbClient.auth.signUp({
-        email: email, password: password, options: { data: { full_name: nama } }
-      });
+      const { data, error } = await dbClient.auth.signUp({ email: email, password: password, options: { data: { full_name: nama } } });
       if (error) alert("GAGAL: " + error.message);
       else { alert("KREDENSIAL BERHASIL DIBUAT! Silakan Login."); switchTab('login'); }
       btnBuatKredensial.innerText = "Buat Kredensial";
     });
   }
 
-  // LOGIN
   if (btnMasukSistem) {
     btnMasukSistem.addEventListener("click", async () => {
       const email = document.getElementById("loginEmail").value;
@@ -865,62 +472,51 @@ try {
 
       if(!email || !password) {
         btnMasukSistem.innerText = "⚠️ ISI EMAIL DAN SANDI!";
-        setTimeout(() => btnMasukSistem.innerText = "Masuk Sistem", 2000);
-        return;
+        setTimeout(() => btnMasukSistem.innerText = "Masuk Sistem", 2000); return;
       }
       
       btnMasukSistem.innerText = "Memverifikasi...";
-
-      const { data, error } = await dbClient.auth.signInWithPassword({
-        email: email, password: password
-      });
+      const { data, error } = await dbClient.auth.signInWithPassword({ email: email, password: password });
 
       if (error) {
-        // GAGAL
         document.getElementById("modal").style.display = "none";
-        isAlarmActive = true; 
-        document.body.classList.add('system-alarm'); 
-        
-        playErrorSound(); // Panggil Suara Error dari Web Audio API
-
+        isAlarmActive = true; document.body.classList.add('system-alarm'); 
+        playErrorSound();
         setTimeout(() => {
-          isAlarmActive = false;
-          document.body.classList.remove('system-alarm');
+          isAlarmActive = false; document.body.classList.remove('system-alarm');
           btnMasukSistem.innerText = "Masuk Sistem"; 
         }, 3000);
 
       } else {
-        // BERHASIL - TRIGGER ANIMASI WARP DAN SUARA CEWEK
+        // --- BERHASIL: ANIMASI WARP DAN VOICE JEPANG ---
         btnMasukSistem.innerText = "AKSES DITERIMA...";
         document.getElementById("modal").style.display = "none";
+        isWarping = true; 
         
-        isWarping = true; // Jalankan animasi Warp
+        // Teks Jepang: IPS LAB X へようこそ。ワープドライブを起動します。
+        // Dibaca: Ai-Pi-Esu Rabo Ekkusu e youkoso. Waapu doraibu o kidou shimasu.
+        const kalimatJP = `アイピーエス ラボ エックス へ ようこそ。ワープドライブを起動します。`;
         
-        const userName = data.user.user_metadata?.full_name || "Researcher";
-        const kalimat = `Welcome to the I P S LAB X, ${userName}. Initiating warp drive.`;
-        
-        const robotVoice = new SpeechSynthesisUtterance(kalimat);
-        robotVoice.lang = 'en-US'; 
+        const robotVoice = new SpeechSynthesisUtterance(kalimatJP);
+        robotVoice.lang = 'ja-JP'; 
         robotVoice.pitch = 1.1; 
-        robotVoice.rate = 0.95; 
+        robotVoice.rate = 1.0; 
 
-        // Cari suara F.R.I.D.A.Y (Cewek)
         if (voices.length === 0) voices = window.speechSynthesis.getVoices();
-        const femaleVoice = voices.find(voice => 
-          voice.lang.includes('en') && 
-          (voice.name.includes('Female') || voice.name.includes('Samantha') || voice.name.includes('Zira') || voice.name.includes('Victoria') || voice.name.includes('Google US English'))
+        
+        // Cari engine suara wanita bahasa Jepang (biasanya Kyoko, Haruka, Ayumi, atau Nanami)
+        const jpFemaleVoice = voices.find(voice => 
+          voice.lang.includes('ja') && 
+          (voice.name.includes('Female') || voice.name.includes('Kyoko') || voice.name.includes('Haruka') || voice.name.includes('Nanami') || voice.name.includes('Ayumi'))
         );
         
-        if (femaleVoice) {
-          robotVoice.voice = femaleVoice;
+        if (jpFemaleVoice) {
+          robotVoice.voice = jpFemaleVoice;
         }
 
         window.speechSynthesis.speak(robotVoice);
         
-        // Pindah halaman
-        setTimeout(() => {
-          window.location.href = "dashboard.html"; 
-        }, 4500); 
+        setTimeout(() => { window.location.href = "dashboard.html"; }, 4500); 
       }
     });
   }
