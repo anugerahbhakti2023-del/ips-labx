@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPS LABX - Ruang Kendali</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    background: #020617;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(0, 255, 255, 0.05), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(0, 255, 255, 0.05), transparent 25%);
+    color: white;
+    overflow-x: hidden;
+  }
+
+  /* STATUS BAR */
+  .status-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 8px 20px;
+    background: rgba(2, 6, 23, 0.95);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: cyan;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    z-index: 101;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(5px);
+  }
+
+  /* DASHBOARD LAYOUT */
+  .dashboard-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    padding: 60px 20px 20px 20px; /* Padding atas untuk status bar */
+    min-height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* PANEL UMUM */
+  .panel {
+    background: rgba(2, 6, 23, 0.7);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: cyan;
+    box-shadow: 0 0 10px cyan;
+  }
+
+  .panel-title {
+    color: #94A3B8;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed rgba(0, 255, 255, 0.3);
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* PROFIL PENELITI (SIDEBAR) */
+  .profile-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .avatar-box {
+    text-align: center;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 2px solid cyan;
+    padding: 5px;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    margin-bottom: 10px;
+  }
+
+  .user-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 5px cyan;
+  }
+
+  .user-id {
+    font-size: 0.8rem;
+    color: #94A3B8;
+  }
+
+  .stats-list {
+    list-style: none;
+    font-size: 0.9rem;
+  }
+
+  .stats-list li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 255, 255, 0.1);
+  }
+
+  /* LOG SISTEM */
+  .system-log {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    color: #4ade80; /* Warna hijau terminal */
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+  }
+
+  .system-log p {
+    margin-bottom: 5px;
+    opacity: 0.8;
+  }
+
+  .system-log p::before {
+    content: "> ";
+  }
+
+  /* KONTEN UTAMA (MODUL & PROGRES) */
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* GRID MODUL */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+  }
+
+  .module-card {
+    background: rgba(0, 255, 255, 0.05);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .module-card:hover {
+    background: rgba(0, 255, 255, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+  }
+
+  .module-card h3 {
+    color: cyan;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+
+  .module-card p {
+    font-size: 0.85rem;
+    color: #94A3B8;
+    margin-bottom: 15px;
+  }
+
+  .btn-akses {
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid cyan;
+    color: cyan;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .module-card:hover .btn-akses {
+    background: cyan;
+    color: #020617;
+  }
+
+  /* PROGRESS BARS */
+  .progress-item {
+    margin-bottom: 15px;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #94A3B8;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: cyan;
+    box-shadow: 0 0 10px cyan;
+    transition: width 1s ease-in-out;
+  }
+
+  /* RESPONSIF MOBILE */
+  @media screen and (max-width: 900px) {
+    .dashboard-container {
+      grid-template-columns: 1fr; /* Jadi satu kolom bertumpuk di HP */
+      padding-top: 50px;
+    }
+    
+    .status-bar {
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.7rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <div>ID AUTH: <span style="color: white;">VALID</span> | KONEKSI SECURE</div>
+  <div id="live-datetime">--:--:-- | --/--/----</div>
+</div>
+
+<div class="dashboard-container">
+  
+  <aside class="profile-section">
+    <div class="panel">
+      <div class="panel-title">KREDENSIAL PENELITI <span style="color: cyan;">[AKTIF]</span></div>
+      <div class="avatar-box">
+        <img src="https://via.placeholder.com/100/020617/00FFFF?text=USER" alt="Avatar" class="avatar">
+        <div class="user-name">Peneliti Alpha</div>
+        <div class="user-id">ID: LABX-90210</div>
+      </div>
+      <ul class="stats-list" style="margin-top: 20px;">
+        <li><span>Level</span> <span style="color: cyan;">03 - Explorer</span></li>
+        <li><span>Poin XP</span> <span style="color: cyan;">1,250</span></li>
+        <li><span>Lencana</span> <span style="color: cyan;">2</span></li>
+      </ul>
+      <button class="btn-akses" style="width: 100%; margin-top: 15px; border-color: #ef4444; color: #ef4444;" onclick="window.location.href='index.html'">LOGOUT SISTEM</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">LOG AKTIVITAS</div>
+      <div class="system-log" id="sysLog">
+        <p>Akses diterima. Selamat datang.</p>
+        <p>Memuat data satelit...</p>
+        <p>Sinkronisasi kurikulum selesai.</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    
+    <div class="panel">
+      <div class="panel-title">STATUS MISI (PROGRES BELAJAR)</div>
+      
+      <div class="progress-item">
+        <div class="progress-label"><span>GEOGRAFI: Pemetaan Wilayah</span> <span>75%</span></div>
+        <div class="progress-bar-bg"><div class="progress-fill" style="width: 0%" data-target="75%"></div></div>
+      </div>
+      
+      <div class="progress-item">
+        <div class="progress-label"><span>SEJARAH: Mesin Waktu Kemerdekaan</span> <span>40%</span></div>
+        <div class="progress-bar-bg"><div class="progress-fill" style="width: 0%" data-target="40%"></div></div>
+      </div>
+
+      <div class="progress-item">
+        <div class="progress-label"><span>EKONOMI: Simulasi Pasar Digital</span> <span>10%</span></div>
+        <div class="progress-bar-bg"><div class="progress-fill" style="width: 0%" data-target="10%"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">TERMINAL AKSES MODUL</div>
+      <div class="module-grid">
+        
+        <div class="module-card">
+          <h3>GEOGRAFI</h3>
+          <p>Eksplorasi tata ruang, interaksi antar wilayah, dan dinamika atmosfer.</p>
+          <button class="btn-akses">MASUK LAB</button>
+        </div>
+
+        <div class="module-card">
+          <h3>SEJARAH</h3>
+          <p>Pelajari kronologi peristiwa masa lalu dan dampaknya pada masa kini.</p>
+          <button class="btn-akses">MASUK LAB</button>
+        </div>
+
+        <div class="module-card">
+          <h3>EKONOMI</h3>
+          <p>Analisis sistem produksi, distribusi, dan konsumsi masyarakat.</p>
+          <button class="btn-akses">MASUK LAB</button>
+        </div>
+
+        <div class="module-card">
+          <h3>SOSIOLOGI</h3>
+          <p>Amati struktur sosial, interaksi budaya, dan konflik masyarakat.</p>
+          <button class="btn-akses">MASUK LAB</button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<script>
+// 1. LOGIKA JAM TANGGAL
+function updateDateTime() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('id-ID', { hour12: false });
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = now.getFullYear();
+  document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
+}
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// 2. ANIMASI PROGRESS BAR
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const progressFills = document.querySelectorAll('.progress-fill');
+    progressFills.forEach(bar => {
+      const target = bar.getAttribute('data-target');
+      bar.style.width = target;
+    });
+  }, 500); // Delay sedikit agar efek animasinya terlihat setelah halaman dimuat
+});
+
+// 3. EFEK TERMINAL LOG (Ketik Otomatis)
+const sysLog = document.getElementById('sysLog');
+const logMessages = [
+  "Memindai modul baru...",
+  "Tidak ada anomali terdeteksi.",
+  "Koneksi ke database stabil.",
+  "Menunggu input komandan..."
+];
+let logIndex = 0;
+
+setInterval(() => {
+  if(logIndex < logMessages.length) {
+    const p = document.createElement('p');
+    p.innerText = logMessages[logIndex];
+    sysLog.appendChild(p);
+    sysLog.scrollTop = sysLog.scrollHeight; // Auto scroll ke bawah
+    logIndex++;
+  }
+}, 3000); // Munculkan log baru setiap 3 detik
+</script>
+
+</body>
+</html>
