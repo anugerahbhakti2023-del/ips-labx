@@ -151,7 +151,7 @@
   /* ========================================= */
   .content-section {
     min-height: 100vh;
-    padding: 100px 20px 50px 20px; /* Padding atas agar tidak tertutup navbar */
+    padding: 100px 20px 50px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -483,7 +483,6 @@
   </div>
 </section>
 
-
 <div class="modal" id="modal">
   <div class="modal-content">
     <div class="scanline"></div>
@@ -552,11 +551,10 @@ function switchTab(tabId) {
   }
 }
 
-// 3. MODAL BUKA/TUTUP & KONEKSI KE DASHBOARD
+// 3. MODAL BUKA/TUTUP
 const btnMulai = document.getElementById("btnMulai");
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
-const btnMasukSistem = document.getElementById("btnMasukSistem"); // Tombol Login
 
 btnMulai.addEventListener("click", () => modal.style.display = "flex");
 closeModal.addEventListener("click", () => modal.style.display = "none");
@@ -567,12 +565,13 @@ window.addEventListener("click", (e) => {
 // ==========================================
 // 6. SISTEM AUTENTIKASI DATABASE (SUPABASE)
 // ==========================================
-// Ganti dengan URL dan ANON KEY dari proyek Supabase kamu:
-const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co/rest/v1/';
+const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
+// Catatan: '/rest/v1/' di akhir URL dihilangkan, supabase-js sudah menanganinya otomatis.
 const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 const btnBuatKredensial = document.getElementById("btnBuatKredensial");
+const btnMasukSistem = document.getElementById("btnMasukSistem");
 
 // ---> FUNGSI REGISTER (DAFTAR) <---
 btnBuatKredensial.addEventListener("click", async () => {
@@ -585,7 +584,6 @@ btnBuatKredensial.addEventListener("click", async () => {
     return;
   }
 
-  // Ubah teks tombol saat loading
   btnBuatKredensial.innerText = "Mendaftarkan...";
 
   const { data, error } = await supabase.auth.signUp({
@@ -600,9 +598,8 @@ btnBuatKredensial.addEventListener("click", async () => {
     alert("GAGAL: " + error.message);
   } else {
     alert("KREDENSIAL BERHASIL DIBUAT! Silakan Login.");
-    switchTab('login'); // Otomatis pindah ke tab login
+    switchTab('login');
     
-    // Kosongkan form
     document.getElementById("regNama").value = "";
     document.getElementById("regEmail").value = "";
     document.getElementById("regPassword").value = "";
@@ -611,8 +608,7 @@ btnBuatKredensial.addEventListener("click", async () => {
 });
 
 // ---> FUNGSI LOGIN (MASUK) <---
-const btnMasukSistemReal = document.getElementById("btnMasukSistem");
-btnMasukSistemReal.addEventListener("click", async () => {
+btnMasukSistem.addEventListener("click", async () => {
   const email = document.getElementById("loginEmail").value;
   const password = document.getElementById("loginPassword").value;
 
@@ -621,8 +617,7 @@ btnMasukSistemReal.addEventListener("click", async () => {
     return;
   }
 
-  // Ubah teks tombol saat loading
-  btnMasukSistemReal.innerText = "Memverifikasi...";
+  btnMasukSistem.innerText = "Memverifikasi...";
 
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
@@ -633,9 +628,9 @@ btnMasukSistemReal.addEventListener("click", async () => {
     alert("AKSES DITOLAK: Kredensial tidak valid atau belum terdaftar.");
   } else {
     alert("AKSES DITERIMA. Mengalihkan ke Ruang Kendali...");
-    window.location.href = "dashboard.html"; // Lempar ke Dashboard!
+    window.location.href = "dashboard.html"; 
   }
-  btnMasukSistemReal.innerText = "Masuk Sistem";
+  btnMasukSistem.innerText = "Masuk Sistem";
 });
 
 // 4. ANIMASI PARTIKEL (Background)
