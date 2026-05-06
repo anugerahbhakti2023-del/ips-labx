@@ -32,8 +32,6 @@
     font-size: 0.8rem; color: cyan; border-bottom: 1px solid rgba(0, 255, 255, 0.3);
     z-index: 101; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);
   }
-  .custom-audio-btn { cursor: pointer; color: #eab308; transition: 0.3s; }
-  .custom-audio-btn:hover { color: white; text-shadow: 0 0 10px #eab308; }
 
   /* NAVBAR */
   nav {
@@ -128,11 +126,7 @@
 <canvas id="canvas"></canvas>
 
 <div class="status-bar">
-  <div>
-    SISTEM: <span style="color: white;">ONLINE</span> | 
-    <label for="uploadClick" class="custom-audio-btn">[GANTI SUARA KLIK]</label>
-    <input type="file" id="uploadClick" accept="audio/*" style="display: none;">
-  </div>
+  <div>SISTEM: <span style="color: white;">ONLINE</span></div>
   <div id="live-datetime">--:--:-- | --/--/----</div>
 </div>
 
@@ -222,32 +216,18 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ==========================================
-// AUDIO SYSTEM & GITHUB PAGES AUDIO
+// AUDIO SYSTEM (GITHUB PAGES)
 // ==========================================
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-// Menggunakan file dari GitHub Repo sebagai default
+// Ambil langsung dari file di GitHub
 let githubAudio = new Audio('scfi-click.wav');
-let customAudio = null;
-
-// Fitur ganti audio secara manual (jika user masih ingin ganti via tombol)
-document.getElementById('uploadClick').addEventListener('change', function(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const url = URL.createObjectURL(file);
-    customAudio = new Audio(url);
-    alert('Sistem Update: Suara klik berhasil diganti!');
-  }
-});
 
 function playClickSound() {
-  // Gunakan custom upload jika ada, kalau tidak ada gunakan dari GitHub (scfi-click.wav)
-  let audioToPlay = customAudio ? customAudio : githubAudio;
-  
-  audioToPlay.currentTime = 0; 
-  audioToPlay.play().catch(e => {
-    // FALLBACK: Jika browser memblokir atau file .wav gagal dimuat dari GitHub, gunakan Web Audio API Synth
+  githubAudio.currentTime = 0; 
+  githubAudio.play().catch(e => {
+    // FALLBACK: Jika browser memblokir auto-play pertama kali
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
@@ -276,7 +256,6 @@ function playErrorSound() {
 
 // Visual Ripple & Suara saat klik
 document.addEventListener('click', (e) => {
-  if(e.target.tagName.toLowerCase() === 'label' && e.target.htmlFor === 'uploadClick') return;
   playClickSound();
   const ripple = document.createElement('div');
   ripple.className = 'click-ripple';
