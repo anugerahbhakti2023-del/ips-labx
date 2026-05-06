@@ -563,76 +563,73 @@ window.addEventListener("click", (e) => {
 });
   
 // ==========================================
-// 6. SISTEM AUTENTIKASI DATABASE (SUPABASE)
+// 2. SISTEM DATABASE SUPABASE DENGAN PELINDUNG
 // ==========================================
-const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
-// Catatan: '/rest/v1/' di akhir URL dihilangkan, supabase-js sudah menanganinya otomatis.
-const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-const btnBuatKredensial = document.getElementById("btnBuatKredensial");
-const btnMasukSistem = document.getElementById("btnMasukSistem");
-
-// ---> FUNGSI REGISTER (DAFTAR) <---
-btnBuatKredensial.addEventListener("click", async () => {
-  const nama = document.getElementById("regNama").value;
-  const email = document.getElementById("regEmail").value;
-  const password = document.getElementById("regPassword").value;
-
-  if(!email || !password || !nama) {
-    alert("SISTEM ERROR: Harap isi semua data kredensial!");
-    return;
+try {
+  // Cek apakah Supabase berhasil terhubung dari internet
+  if (typeof window.supabase === 'undefined') {
+    throw new Error("Library Supabase gagal dimuat. Pastikan ada koneksi internet!");
   }
 
-  btnBuatKredensial.innerText = "Mendaftarkan...";
+  const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
+  const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
+  
+  // NAMA VARIABEL DIGANTI JADI dbClient AGAR TIDAK BENTROK
+  const dbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-  const { data, error } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: { full_name: nama }
-    }
-  });
+  const btnBuatKredensial = document.getElementById("btnBuatKredensial");
+  const btnMasukSistem = document.getElementById("btnMasukSistem");
 
-  if (error) {
-    alert("GAGAL: " + error.message);
-  } else {
-    alert("KREDENSIAL BERHASIL DIBUAT! Silakan Login.");
-    switchTab('login');
-    
-    document.getElementById("regNama").value = "";
-    document.getElementById("regEmail").value = "";
-    document.getElementById("regPassword").value = "";
+  // REGISTER
+  if (btnBuatKredensial) {
+    btnBuatKredensial.addEventListener("click", async () => {
+      const nama = document.getElementById("regNama").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+
+      if(!email || !password || !nama) return alert("Harap isi semua data!");
+      btnBuatKredensial.innerText = "Mendaftarkan...";
+
+      // Ganti supabase jadi dbClient
+      const { data, error } = await dbClient.auth.signUp({
+        email: email, password: password, options: { data: { full_name: nama } }
+      });
+
+      if (error) alert("GAGAL: " + error.message);
+      else {
+        alert("KREDENSIAL BERHASIL DIBUAT! Silakan Login.");
+        switchTab('login');
+      }
+      btnBuatKredensial.innerText = "Buat Kredensial";
+    });
   }
-  btnBuatKredensial.innerText = "Buat Kredensial";
-});
 
-// ---> FUNGSI LOGIN (MASUK) <---
-btnMasukSistem.addEventListener("click", async () => {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
+  // LOGIN
+  if (btnMasukSistem) {
+    btnMasukSistem.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
 
-  if(!email || !password) {
-    alert("SISTEM ERROR: Harap isi Email dan Sandi!");
-    return;
+      if(!email || !password) return alert("Harap isi Email dan Sandi!");
+      btnMasukSistem.innerText = "Memverifikasi...";
+
+      // Ganti supabase jadi dbClient
+      const { data, error } = await dbClient.auth.signInWithPassword({
+        email: email, password: password
+      });
+
+      if (error) alert("AKSES DITOLAK: Kredensial tidak valid.");
+      else {
+        alert("AKSES DITERIMA. Mengalihkan...");
+        window.location.href = "dashboard.html"; 
+      }
+      btnMasukSistem.innerText = "Masuk Sistem";
+    });
   }
 
-  btnMasukSistem.innerText = "Memverifikasi...";
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
-
-  if (error) {
-    alert("AKSES DITOLAK: Kredensial tidak valid atau belum terdaftar.");
-  } else {
-    alert("AKSES DITERIMA. Mengalihkan ke Ruang Kendali...");
-    window.location.href = "dashboard.html"; 
-  }
-  btnMasukSistem.innerText = "Masuk Sistem";
-});
-
+} catch (err) {
+  console.error("Supabase tidak aktif:", err.message);
+}
 // 4. ANIMASI PARTIKEL (Background)
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
