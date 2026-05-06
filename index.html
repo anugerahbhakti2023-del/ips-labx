@@ -2,101 +2,283 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>IPS LABX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPS LABX - Laboratorium Ilmu Pengetahuan Sosial</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #020617;
-  color: white;
-  overflow: hidden;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-}
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #020617;
+    color: white;
+    /* Ubah overflow agar bisa di-scroll ke bawah */
+    overflow-x: hidden; 
+  }
 
-.hero {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  perspective: 1000px;
-}
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
 
-/* LOGO UPGRADE */
-.logo {
-  width: 550px;
-  max-width: 95%;
-  transition: transform 0.15s;
-  filter: drop-shadow(0 0 35px cyan);
-}
+  /* NAVBAR */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+  }
 
-h1 {
-  margin-top: 20px;
-}
+  nav .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: cyan;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  }
 
-/* BUTTON */
-.btn {
-  margin-top: 20px;
-  padding: 12px 25px;
-  border-radius: 10px;
-  border: none;
-  background: cyan;
-  cursor: pointer;
-}
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+  }
 
-/* MODAL */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.85);
-}
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
 
-.modal-content {
-  background: #0F172A;
-  padding: 30px;
-  border-radius: 15px;
-  width: 300px;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(0,255,255,0.3);
-}
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: none;
-}
+  nav ul li a:hover {
+    color: cyan;
+  }
+
+  /* HERO SECTION */
+  .hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    perspective: 1000px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 300px; /* Diperkecil sedikit agar proporsional */
+    max-width: 80%;
+    transition: transform 0.1s ease-out;
+    filter: drop-shadow(0 0 35px cyan);
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    color: #94A3B8;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+  }
+
+  /* BUTTON */
+  .btn {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    background: cyan;
+    color: #020617;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  }
+
+  .btn:hover {
+    background: #00cccc;
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.6);
+  }
+
+  /* CONTENT SECTION */
+  .content-section {
+    padding: 100px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .content-section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: cyan;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+    backdrop-filter: blur(5px);
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    border-color: cyan;
+  }
+
+  .card h3 {
+    color: white;
+    margin-bottom: 15px;
+  }
+
+  .card p {
+    color: #94A3B8;
+    line-height: 1.6;
+  }
+
+  /* MODAL */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: #0F172A;
+    padding: 40px 30px;
+    border-radius: 15px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(0,255,255,0.2);
+    position: relative;
+  }
+
+  .modal-content h2 {
+    margin-top: 0;
+    color: cyan;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #94A3B8;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    color: white;
+  }
+
+  /* CSS Input yang diperbaiki */
+  .modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #1E293B;
+    background: #020617;
+    color: white;
+    outline: none;
+  }
+
+  .modal-content input:focus {
+    border-color: cyan;
+  }
+
+  .modal-content .btn {
+    width: 100%;
+    margin-top: 15px;
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 20px; }
+    nav ul { display: none; } /* Sembunyikan menu di mobile untuk sementara */
+    .content-section { padding: 50px 20px; }
+  }
 </style>
-
 </head>
-
 <body>
 
 <canvas id="canvas"></canvas>
 
-<div class="hero">
-  <img src="logo.png" class="logo" id="logo">
+<nav>
+  <div class="brand">IPS LABX</div>
+  <ul>
+    <li><a href="#beranda">Beranda</a></li>
+    <li><a href="#modul">Modul</a></li>
+    <li><a href="#tentang">Tentang</a></li>
+  </ul>
+</nav>
+
+<div class="hero" id="beranda">
+  <img src="logo.png" class="logo" id="logo" alt="IPS LABX Logo" onerror="this.src='https://via.placeholder.com/300x300.png?text=LOGO+IPS+LABX'">
   <h1>IPS LABX</h1>
-  <button class="btn" id="btnMulai">Mulai</button>
+  <p class="subtitle">Eksplorasi Ruang, Waktu, dan Masyarakat</p>
+  <button class="btn" id="btnMulai">Masuk Laboratorium</button>
 </div>
 
-<!-- MODAL -->
+<div class="content-section" id="modul">
+  <h2>Modul Interaktif</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>🌍 Geografi</h3>
+      <p>Pelajari spasial bumi, fenomena alam, dan interaksi manusia dengan lingkungannya secara interaktif.</p>
+    </div>
+    <div class="card">
+      <h3>🏛️ Sejarah</h3>
+      <p>Mesin waktu virtual untuk menelusuri peradaban masa lalu dan peristiwa penting dunia.</p>
+    </div>
+    <div class="card">
+      <h3>📈 Ekonomi</h3>
+      <p>Simulasi pasar, literasi keuangan, dan analisis perilaku manusia dalam memenuhi kebutuhannya.</p>
+    </div>
+    <div class="card">
+      <h3>🤝 Sosiologi</h3>
+      <p>Pahami struktur sosial, fenomena masyarakat, dan dinamika interaksi antar individu.</p>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modal">
   <div class="modal-content">
-    <h2>Login / Daftar</h2>
-    <input type="text" placeholder="Email">
+    <span class="close-btn" id="closeModal">&times;</span>
+    <h2>Login Akses</h2>
+    <input type="text" placeholder="Email / NISN">
     <input type="password" placeholder="Password">
     <button class="btn">Masuk</button>
   </div>
@@ -109,81 +291,97 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let mouse = { x: 0, y: 0 };
+let mouse = { x: null, y: null };
 
 document.addEventListener("mousemove", (e) => {
   mouse.x = e.clientX;
   mouse.y = e.clientY;
 });
 
+// Reset mouse jika keluar layar
+document.addEventListener("mouseleave", () => {
+  mouse.x = null;
+  mouse.y = null;
+});
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
 /* PARTICLES */
 let particles = [];
+const particleCount = window.innerWidth < 768 ? 150 : 320; // Optimasi untuk mobile
 
-for (let i = 0; i < 320; i++) {
+for (let i = 0; i < particleCount; i++) {
   particles.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: Math.random() - 0.5,
-    vy: Math.random() - 0.5
+    vx: (Math.random() - 0.5) * 1.5,
+    vy: (Math.random() - 0.5) * 1.5
   });
 }
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  let mouseRadius = 140;
+  let mouseRadius = 150;
 
   for (let i = 0; i < particles.length; i++) {
     let p = particles[i];
 
-    let dxMouse = p.x - mouse.x;
-    let dyMouse = p.y - mouse.y;
-    let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-
-    // gerak normal
+    // Gerak normal
     p.x += p.vx;
     p.y += p.vy;
 
-    // tarik ke mouse
-    if (distMouse < 120) {
-      p.x += (mouse.x - p.x) * 0.02;
-      p.y += (mouse.y - p.y) * 0.02;
+    // Hitung jarak ke mouse (jika mouse ada di layar)
+    let distMouse = 1000; 
+    if (mouse.x !== null && mouse.y !== null) {
+      let dxMouse = p.x - mouse.x;
+      let dyMouse = p.y - mouse.y;
+      distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+      
+      // Efek gravitasi / tarik ke mouse
+      if (distMouse < 120) {
+        p.x += (mouse.x - p.x) * 0.03;
+        p.y += (mouse.y - p.y) * 0.03;
+      }
     }
 
-    // === NETWORK HANYA DI AREA MOUSE ===
+    // NETWORK HANYA DI AREA MOUSE
     if (distMouse < mouseRadius) {
-
       for (let j = i; j < particles.length; j++) {
         let p2 = particles[j];
-
         let dx = p.x - p2.x;
         let dy = p.y - p2.y;
         let dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < 90) {
           ctx.beginPath();
-          ctx.strokeStyle = "rgba(0,255,255,0.6)";
+          // Semakin dekat, garis semakin tebal/terang
+          let opacity = 1 - (dist / 90);
+          ctx.strokeStyle = `rgba(0, 255, 255, ${opacity * 0.8})`;
+          ctx.lineWidth = 1;
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(p2.x, p2.y);
           ctx.stroke();
         }
       }
 
-      // highlight
+      // Highlight titik
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
       ctx.fillStyle = "white";
       ctx.fill();
-
     } else {
-      // normal
+      // Titik normal
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = "cyan";
+      ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
       ctx.fill();
     }
 
-    // bounce
+    // Pantulan di ujung layar
     if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
     if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
   }
@@ -193,22 +391,35 @@ function animate() {
 
 animate();
 
-/* LOGO 3D */
+/* LOGO 3D (Lebih halus) */
 const logo = document.getElementById("logo");
 
 document.addEventListener("mousemove", (e) => {
-  let x = (window.innerWidth / 2 - e.clientX) / 25;
-  let y = (window.innerHeight / 2 - e.clientY) / 25;
+  // Hanya jalankan efek jika scroll masih di atas (di area hero)
+  if(window.scrollY > window.innerHeight / 2) return;
 
-  logo.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  let xAxis = (window.innerWidth / 2 - e.clientX) / 25;
+  let yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+
+  logo.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
 });
 
-/* MODAL */
-const btn = document.getElementById("btnMulai");
-const modal = document.getElementById("modal");
+// Reset rotasi logo jika mouse keluar
+document.addEventListener("mouseleave", () => {
+  logo.style.transform = `rotateY(0deg) rotateX(0deg)`;
+});
 
-btn.addEventListener("click", () => {
+/* MODAL LOGIC */
+const btnMulai = document.getElementById("btnMulai");
+const modal = document.getElementById("modal");
+const closeModal = document.getElementById("closeModal");
+
+btnMulai.addEventListener("click", () => {
   modal.style.display = "flex";
+});
+
+closeModal.addEventListener("click", () => {
+  modal.style.display = "none";
 });
 
 window.addEventListener("click", (e) => {
