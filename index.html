@@ -51,7 +51,7 @@
     perspective: 1000px; text-align: center; font-family: Arial, sans-serif; padding: 0 20px;
     transition: opacity 1s ease-out;
   }
-  .logo { width: 550px; max-width: 80%; transition: transform 0.1s ease-out; filter: drop-shadow(0 0 30px cyan); }
+  .logo { width: 450px; max-width: 80%; transition: transform 0.1s ease-out; filter: drop-shadow(0 0 30px cyan); }
   h1 { font-size: 3.5rem; margin-top: 20px; margin-bottom: 5px; letter-spacing: 3px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
   .subtitle { color: #94A3B8; margin-bottom: 30px; font-size: 1.1rem; letter-spacing: 1px; }
 
@@ -465,17 +465,21 @@ try {
         const kalimatJP = `アイピーエス ラボ エックス へ ようこそ。ワープドライブを起動します。`;
         const robotVoice = new SpeechSynthesisUtterance(kalimatJP);
         
-        // Setingan suara 'Onee-san' (Dewasa, santai, dan tegas)
+        // SETINGAN SUARA ALA MIKASA ACKERMAN
+        // Datar (pitch direndahkan), dingin, tempo pelan
         robotVoice.lang = 'ja-JP'; 
-        robotVoice.pitch = 0.85; // Pitch lebih rendah
-        robotVoice.rate = 0.85;  // Tempo sedikit lebih pelan dan santai
+        robotVoice.pitch = 0.65; 
+        robotVoice.rate = 0.75;  
 
         if (voices.length === 0) voices = window.speechSynthesis.getVoices();
+        
+        // Mencari suara wanita Jepang yang paling natural (biasanya Google Japanese Female)
         const jpFemaleVoice = voices.find(voice => 
           voice.lang.includes('ja') && 
-          (voice.name.includes('Female') || voice.name.includes('Kyoko') || voice.name.includes('Haruka') || voice.name.includes('Nanami') || voice.name.includes('Ayumi'))
+          (voice.name.includes('Google') || voice.name.includes('Female') || voice.name.includes('Kyoko') || voice.name.includes('Haruka') || voice.name.includes('Nanami') || voice.name.includes('Ayumi'))
         );
         if (jpFemaleVoice) robotVoice.voice = jpFemaleVoice;
+        
         window.speechSynthesis.speak(robotVoice);
 
         // Munculkan Logo dengan efek Pop-Up setelah 1 detik
