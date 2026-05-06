@@ -6,6 +6,11 @@
 <title>IPS LABX - Laboratorium Ilmu Pengetahuan Sosial</title>
 
 <style>
+  /* Mengatur Scroll yang mulus */
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     box-sizing: border-box;
     margin: 0;
@@ -53,7 +58,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.9), transparent);
+    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), transparent);
     z-index: 100;
   }
 
@@ -84,7 +89,7 @@
     text-shadow: 0 0 8px cyan;
   }
 
-  /* HERO SECTION */
+  /* HERO SECTION (BERANDA) */
   .hero {
     height: 100vh;
     display: flex;
@@ -141,6 +146,115 @@
     box-shadow: 0 0 20px cyan;
   }
 
+  /* ========================================= */
+  /* SECTION BARU: MODUL & TENTANG             */
+  /* ========================================= */
+  .content-section {
+    min-height: 100vh;
+    padding: 100px 20px 50px 20px; /* Padding atas agar tidak tertutup navbar */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: Arial, sans-serif;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 0 10px cyan;
+    margin-bottom: 40px;
+    text-align: center;
+    border-bottom: 2px dashed rgba(0, 255, 255, 0.3);
+    padding-bottom: 10px;
+    width: 100%;
+  }
+
+  /* PANEL DATA CP IPS */
+  .data-panel {
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05);
+    width: 100%;
+    line-height: 1.6;
+    color: #94A3B8;
+  }
+
+  .data-panel h3 {
+    color: cyan;
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
+  }
+
+  .data-panel p {
+    margin-bottom: 15px;
+  }
+
+  .data-panel ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+  }
+
+  /* KARTU KREATOR (TENTANG) */
+  .creator-card {
+    display: flex;
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid cyan;
+    border-radius: 8px;
+    padding: 30px;
+    gap: 30px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .creator-card::before {
+    content: 'ID-KREATOR';
+    position: absolute;
+    top: 10px;
+    right: -20px;
+    transform: rotate(45deg);
+    background: cyan;
+    color: #020617;
+    padding: 2px 30px;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  .creator-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    border: 2px solid cyan;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    object-fit: cover;
+  }
+
+  .creator-info h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px cyan;
+    font-family: Arial, sans-serif;
+  }
+
+  .creator-info h4 {
+    color: cyan;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+
+  .creator-info p {
+    color: #94A3B8;
+    line-height: 1.5;
+  }
+
   /* MODAL HOLOGRAM */
   .modal {
     position: fixed;
@@ -166,7 +280,6 @@
     overflow: hidden;
   }
 
-  /* Efek Scanline CRT */
   .scanline {
     position: absolute;
     top: 0;
@@ -200,7 +313,6 @@
     text-shadow: 0 0 10px white;
   }
 
-  /* Sistem Tab Form */
   .tabs {
     display: flex;
     margin-bottom: 25px;
@@ -273,9 +385,7 @@
     margin-top: 10px;
   }
 
-  /* ========================================= */
-  /* MEDIA QUERIES (MODE MOBILE/DESKTOP OTOMATIS) */
-  /* ========================================= */
+  /* MEDIA QUERIES MOBILE */
   @media screen and (max-width: 768px) {
     .status-bar {
       flex-direction: column;
@@ -301,13 +411,9 @@
       font-size: 2.2rem;
     }
 
-    .subtitle {
-      font-size: 0.9rem;
-    }
-
-    .modal-content {
-      width: 90%;
-      padding: 25px;
+    .creator-card {
+      flex-direction: column;
+      text-align: center;
     }
   }
 </style>
@@ -330,12 +436,53 @@
   </ul>
 </nav>
 
-<div class="hero" id="beranda">
+<section class="hero" id="beranda">
   <img src="logo.png" class="logo" id="logo" alt="IPS LABX Logo">
   <h1>IPS LABX</h1>
   <p class="subtitle">SISTEM EKSPLORASI RUANG, WAKTU & MASYARAKAT</p>
   <button class="btn" id="btnMulai">Inisiasi Akses</button>
-</div>
+</section>
+
+<section class="content-section" id="modul">
+  <h2 class="section-title">DATA MODUL IPS</h2>
+  
+  <div class="data-panel">
+    <h3>> CAPAIAN PEMBELAJARAN (FASE D)</h3>
+    <p>Pada akhir fase D, peserta didik memahami ruang letak geografis dan pengaruhnya terhadap kondisi alam, serta kehidupan sosial, ekonomi, dan politik.</p>
+    
+    <h3>> ELEMEN PEMAHAMAN</h3>
+    <ul>
+      <li><strong>Keruangan dan Konektivitas:</strong> Memahami letak geografis, cuaca, iklim, dan dampaknya.</li>
+      <li><strong>Perkembangan Masyarakat:</strong> Mengidentifikasi dinamika sejarah dari masa praaksara hingga era modern.</li>
+      <li><strong>Interaksi Sosial & Ekonomi:</strong> Menganalisis perilaku manusia dalam memenuhi kebutuhan hidup sehari-hari.</li>
+    </ul>
+
+    <p style="color: cyan; text-align: center; margin-top: 20px; font-weight: bold;">
+      [ UNTUK MENGAKSES MATERI LENGKAP, SILAKAN LOGIN KE SISTEM ]
+    </p>
+  </div>
+</section>
+
+<section class="content-section" id="tentang">
+  <h2 class="section-title">IDENTIFIKASI KREATOR</h2>
+  
+  <div class="creator-card">
+    <img src="https://via.placeholder.com/150/020617/00FFFF?text=FOTO+KAMU" alt="Foto Kreator" class="creator-photo">
+    
+    <div class="creator-info">
+      <h3>[NAMA KAMU DI SINI]</h3>
+      <h4>Peneliti Utama / Web Developer</h4>
+      <p>
+        "Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran Ilmu Pengetahuan Sosial. Dengan pendekatan gamifikasi dan UI futuristik, saya berharap platform ini dapat meningkatkan minat eksplorasi data keruangan, sejarah, dan sosiologi bagi generasi digital."
+      </p>
+      <p style="margin-top: 10px; font-size: 0.85rem;">
+        > Sistem Diciptakan: 2024<br>
+        > Basis Operasi: Indonesia
+      </p>
+    </div>
+  </div>
+</section>
+
 
 <div class="modal" id="modal">
   <div class="modal-content">
@@ -356,7 +503,7 @@
         <label>> KATA SANDI</label>
         <input type="password" placeholder="********">
       </div>
-      <button class="btn">Masuk Sistem</button>
+      <button class="btn" id="btnMasukSistem">Masuk Sistem</button>
     </div>
 
     <div id="form-register" class="form-container">
@@ -379,9 +526,7 @@
 </div>
 
 <script>
-// ==========================================
-// 1. LOGIKA JAM & TANGGAL (STATUS BAR)
-// ==========================================
+// 1. LOGIKA JAM & TANGGAL
 function updateDateTime() {
   const now = new Date();
   const time = now.toLocaleTimeString('id-ID', { hour12: false });
@@ -393,9 +538,7 @@ function updateDateTime() {
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-// ==========================================
-// 2. LOGIKA TAB MODAL (LOGIN & REGISTER)
-// ==========================================
+// 2. LOGIKA TAB MODAL
 function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
@@ -408,12 +551,11 @@ function switchTab(tabId) {
   }
 }
 
-// ==========================================
-// 3. LOGIKA MODAL BUKA/TUTUP
-// ==========================================
+// 3. MODAL BUKA/TUTUP & KONEKSI KE DASHBOARD
 const btnMulai = document.getElementById("btnMulai");
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
+const btnMasukSistem = document.getElementById("btnMasukSistem"); // Tombol Login
 
 btnMulai.addEventListener("click", () => modal.style.display = "flex");
 closeModal.addEventListener("click", () => modal.style.display = "none");
@@ -421,9 +563,12 @@ window.addEventListener("click", (e) => {
   if (e.target === modal) modal.style.display = "none";
 });
 
-// ==========================================
-// 4. ANIMASI PARTIKEL (Responsive Mobile/Desktop)
-// ==========================================
+// Aksi ketika tombol "Masuk Sistem" diklik (Pindah ke dashboard)
+btnMasukSistem.addEventListener("click", () => {
+  window.location.href = "dashboard.html";
+});
+
+// 4. ANIMASI PARTIKEL (Background)
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -435,8 +580,6 @@ resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 let mouse = { x: null, y: null };
-
-// Hanya jalankan interaksi mouse jika dibuka di Desktop
 if (window.innerWidth > 768) {
   document.addEventListener("mousemove", (e) => {
     mouse.x = e.clientX;
@@ -449,7 +592,6 @@ if (window.innerWidth > 768) {
 }
 
 let particles = [];
-// Otomatis kurangi titik partikel jika di HP agar tidak berat
 let particleCount = window.innerWidth < 768 ? 80 : 250; 
 
 for (let i = 0; i < particleCount; i++) {
@@ -517,9 +659,7 @@ function animate() {
 }
 animate();
 
-// ==========================================
-// 5. ANIMASI LOGO 3D (Hanya untuk Desktop)
-// ==========================================
+// 5. ANIMASI LOGO 3D
 const logo = document.getElementById("logo");
 if (window.innerWidth > 768) {
   document.addEventListener("mousemove", (e) => {
