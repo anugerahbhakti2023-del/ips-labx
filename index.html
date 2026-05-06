@@ -810,26 +810,33 @@ try {
           btnMasukSistem.innerText = "Masuk Sistem"; 
         }, 3000);
 
-      } else {
-        // --- JIKA BERHASIL LOGIN (MODE ROBOT SCI-FI) ---
+} else {
+        // --- JIKA BERHASIL LOGIN (MODE ASISTEN WANITA / F.R.I.D.A.Y) ---
         btnMasukSistem.innerText = "AKSES DITERIMA...";
         
-        // 1. Ambil nama dari database (default ke "Researcher" jika kosong)
         const userName = data.user.user_metadata?.full_name || "Researcher";
-        
-        // 2. Siapkan Kalimatnya
         const kalimat = `Welcome Mister ${userName} in the IPS LAB X.`;
         
-        // 3. Panggil Mesin Suara (Web Speech API)
         const robotVoice = new SpeechSynthesisUtterance(kalimat);
-        robotVoice.lang = 'en-US'; // Pakai bahasa Inggris agar pelafalannya keren
-        robotVoice.pitch = 0.3;    // Nada rendah (0 sampai 2) ala robot
-        robotVoice.rate = 0.8;     // Sedikit diperlambat agar terdengar dramatis
+        robotVoice.lang = 'en-US'; 
+        robotVoice.pitch = 1.1; // Nada 1.1 memberikan kesan feminim dan manusiawi
+        robotVoice.rate = 0.95; // Kecepatan bicara natural (tidak terlalu lambat)
 
-        // 4. Mainkan Suaranya!
+        // Trik mencari suara wanita terbaik di sistem operasi kamu
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(voice => 
+          voice.lang.includes('en') && 
+          (voice.name.includes('Female') || voice.name.includes('Samantha') || voice.name.includes('Zira') || voice.name.includes('Victoria'))
+        );
+        
+        // Jika ketemu suara wanita, gunakan suara itu
+        if (femaleVoice) {
+          robotVoice.voice = femaleVoice;
+        }
+
         window.speechSynthesis.speak(robotVoice);
         
-        // 5. Tunggu sampai robot selesai bicara baru pindah halaman (sekitar 4 detik)
+        // Tunggu sekitar 4 detik sebelum pindah halaman
         setTimeout(() => {
           window.location.href = "dashboard.html"; 
         }, 4000); 
