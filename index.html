@@ -8,11 +8,12 @@
 <style>
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
   body {
-    margin: 0;
-    font-family: 'Courier New', Courier, monospace; /* Font diganti agar lebih terasa seperti sistem komputer/sci-fi */
+    font-family: 'Courier New', Courier, monospace; 
     background: #020617;
     color: white;
     overflow-x: hidden; 
@@ -25,13 +26,13 @@
     z-index: -1;
   }
 
-  /* STATUS BAR (BARU) */
+  /* STATUS BAR */
   .status-bar {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 5px 20px;
-    background: rgba(2, 6, 23, 0.9);
+    padding: 8px 20px;
+    background: rgba(2, 6, 23, 0.95);
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
@@ -40,12 +41,13 @@
     z-index: 101;
     text-transform: uppercase;
     letter-spacing: 1px;
+    backdrop-filter: blur(5px);
   }
 
-  /* NAVBAR (Disempurnakan) */
+  /* NAVBAR */
   nav {
     position: fixed;
-    top: 25px; /* Diturunkan sedikit memberi ruang untuk status bar */
+    top: 35px; 
     width: 100%;
     padding: 15px 50px;
     display: flex;
@@ -67,8 +69,6 @@
     list-style: none;
     display: flex;
     gap: 30px;
-    margin: 0;
-    padding: 0;
   }
 
   nav ul li a {
@@ -94,10 +94,11 @@
     perspective: 1000px;
     text-align: center;
     font-family: Arial, sans-serif;
+    padding: 0 20px;
   }
 
   .logo {
-    width: 550px;
+    width: 450px; 
     max-width: 80%;
     transition: transform 0.1s ease-out;
     filter: drop-shadow(0 0 30px cyan);
@@ -140,7 +141,7 @@
     box-shadow: 0 0 20px cyan;
   }
 
-  /* MODAL HOLOGRAM (BARU) */
+  /* MODAL HOLOGRAM */
   .modal {
     position: fixed;
     top: 0;
@@ -150,7 +151,7 @@
     display: none;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(8px);
     z-index: 1000;
   }
@@ -272,6 +273,43 @@
     margin-top: 10px;
   }
 
+  /* ========================================= */
+  /* MEDIA QUERIES (MODE MOBILE/DESKTOP OTOMATIS) */
+  /* ========================================= */
+  @media screen and (max-width: 768px) {
+    .status-bar {
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      padding: 5px;
+    }
+
+    nav {
+      top: 50px;
+      padding: 15px 20px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    nav ul {
+      gap: 15px;
+      font-size: 0.85rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+    }
+
+    .modal-content {
+      width: 90%;
+      padding: 25px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -293,7 +331,7 @@
 </nav>
 
 <div class="hero" id="beranda">
-  <img src="logo.png" class="logo" id="logo" alt="IPS LABX Logo" onerror="this.src='https://via.placeholder.com/280x280.png?text=LOGO+LABX'">
+  <img src="logo.png" class="logo" id="logo" alt="IPS LABX Logo">
   <h1>IPS LABX</h1>
   <p class="subtitle">SISTEM EKSPLORASI RUANG, WAKTU & MASYARAKAT</p>
   <button class="btn" id="btnMulai">Inisiasi Akses</button>
@@ -347,11 +385,9 @@
 function updateDateTime() {
   const now = new Date();
   const time = now.toLocaleTimeString('id-ID', { hour12: false });
-  
   const day = String(now.getDate()).padStart(2, '0');
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const year = now.getFullYear();
-  
   document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
 }
 setInterval(updateDateTime, 1000);
@@ -361,11 +397,8 @@ updateDateTime();
 // 2. LOGIKA TAB MODAL (LOGIN & REGISTER)
 // ==========================================
 function switchTab(tabId) {
-  // Hapus class active dari semua tombol dan form
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
-
-  // Tambahkan class active ke yang dipilih
   if(tabId === 'login') {
     document.querySelectorAll('.tab-btn')[0].classList.add('active');
     document.getElementById('form-login').classList.add('active');
@@ -382,46 +415,42 @@ const btnMulai = document.getElementById("btnMulai");
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
 
-btnMulai.addEventListener("click", () => {
-  modal.style.display = "flex";
-});
-
-closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-
+btnMulai.addEventListener("click", () => modal.style.display = "flex");
+closeModal.addEventListener("click", () => modal.style.display = "none");
 window.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
+  if (e.target === modal) modal.style.display = "none";
 });
 
 // ==========================================
-// 4. ANIMASI PARTIKEL JARINGAN
+// 4. ANIMASI PARTIKEL (Responsive Mobile/Desktop)
 // ==========================================
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
 
 let mouse = { x: null, y: null };
 
-document.addEventListener("mousemove", (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-});
-document.addEventListener("mouseleave", () => {
-  mouse.x = null;
-  mouse.y = null;
-});
-window.addEventListener("resize", () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
+// Hanya jalankan interaksi mouse jika dibuka di Desktop
+if (window.innerWidth > 768) {
+  document.addEventListener("mousemove", (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  document.addEventListener("mouseleave", () => {
+    mouse.x = null;
+    mouse.y = null;
+  });
+}
 
 let particles = [];
-const particleCount = window.innerWidth < 768 ? 150 : 320;
+// Otomatis kurangi titik partikel jika di HP agar tidak berat
+let particleCount = window.innerWidth < 768 ? 80 : 250; 
 
 for (let i = 0; i < particleCount; i++) {
   particles.push({
@@ -477,7 +506,7 @@ function animate() {
     } else {
       ctx.beginPath();
       ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0, 255, 255, 0.5)";
+      ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
       ctx.fill();
     }
 
@@ -489,18 +518,20 @@ function animate() {
 animate();
 
 // ==========================================
-// 5. ANIMASI LOGO 3D
+// 5. ANIMASI LOGO 3D (Hanya untuk Desktop)
 // ==========================================
 const logo = document.getElementById("logo");
-document.addEventListener("mousemove", (e) => {
-  if(window.scrollY > window.innerHeight / 2) return;
-  let xAxis = (window.innerWidth / 2 - e.clientX) / 25;
-  let yAxis = (window.innerHeight / 2 - e.clientY) / 25;
-  logo.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-});
-document.addEventListener("mouseleave", () => {
-  logo.style.transform = `rotateY(0deg) rotateX(0deg)`;
-});
+if (window.innerWidth > 768) {
+  document.addEventListener("mousemove", (e) => {
+    if(window.scrollY > window.innerHeight / 2) return;
+    let xAxis = (window.innerWidth / 2 - e.clientX) / 30;
+    let yAxis = (window.innerHeight / 2 - e.clientY) / 30;
+    logo.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+  });
+  document.addEventListener("mouseleave", () => {
+    logo.style.transform = `rotateY(0deg) rotateX(0deg)`;
+  });
+}
 </script>
 
 </body>
