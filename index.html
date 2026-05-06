@@ -6,289 +6,845 @@
 <title>IPS LABX - Laboratorium Ilmu Pengetahuan Sosial</title>
 
 <style>
-  /* Mengatur Scroll yang mulus */
-  html { scroll-behavior: smooth; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* Mengatur Scroll yang mulus */
+  html {
+    scroll-behavior: smooth;
+  }
 
-  body {
-    font-family: 'Courier New', Courier, monospace; 
-    background: #020617;
-    color: white;
-    overflow-x: hidden; 
-    transition: background 0.5s;
-  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 
-  canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+  body {
+    font-family: 'Courier New', Courier, monospace; 
+    background: #020617;
+    color: white;
+    overflow-x: hidden; 
+  }
 
-  /* STATUS BAR */
-  .status-bar {
-    position: fixed; top: 0; width: 100%; padding: 8px 20px;
-    background: rgba(2, 6, 23, 0.95); display: flex; justify-content: space-between;
-    font-size: 0.8rem; color: cyan; border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-    z-index: 101; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);
-  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
 
-  /* NAVBAR */
-  nav {
-    position: fixed; top: 35px; width: 100%; padding: 15px 50px;
-    display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), transparent); z-index: 100;
-  }
-  nav .brand { font-size: 1.5rem; font-weight: bold; color: white; text-shadow: 0 0 10px cyan; font-family: Arial, sans-serif; }
-  nav ul { list-style: none; display: flex; gap: 30px; }
-  nav ul li a { color: #94A3B8; text-decoration: none; font-weight: bold; transition: all 0.3s; font-family: Arial, sans-serif; }
-  nav ul li a:hover { color: cyan; text-shadow: 0 0 8px cyan; }
+  /* STATUS BAR */
+  .status-bar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 8px 20px;
+    background: rgba(2, 6, 23, 0.95);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: cyan;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    z-index: 101;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    backdrop-filter: blur(5px);
+  }
 
-  /* HERO SECTION */
-  .hero {
-    height: 100vh; display: flex; justify-content: center; align-items: center;
-    flex-direction: column; text-align: center; font-family: Arial, sans-serif; padding: 0 20px;
-  }
-  .logo { width: 450px; max-width: 80%; filter: drop-shadow(0 0 30px cyan); transition: 0.5s; }
-  h1 { font-size: 3.5rem; margin-top: 20px; letter-spacing: 3px; text-shadow: 0 0 15px rgba(0, 255, 255, 0.5); }
-  .subtitle { color: #94A3B8; margin-bottom: 30px; font-size: 1.1rem; letter-spacing: 1px; }
+  /* NAVBAR */
+  nav {
+    position: fixed;
+    top: 35px; 
+    width: 100%;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(2, 6, 23, 0.95), transparent);
+    z-index: 100;
+  }
 
-  /* BUTTON */
-  .btn {
-    padding: 12px 35px; border-radius: 4px; border: 1px solid cyan;
-    background: rgba(0, 255, 255, 0.1); color: cyan; font-weight: bold;
-    cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 2px;
-  }
-  .btn:hover { background: cyan; color: #020617; box-shadow: 0 0 20px cyan; }
+  nav .brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 0 10px cyan;
+    font-family: Arial, sans-serif;
+  }
 
-  /* CONTENT SECTIONS */
-  .content-section { min-height: 100vh; padding: 100px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 1000px; margin: 0 auto; }
-  .section-title { font-family: Arial, sans-serif; font-size: 2.5rem; color: white; text-shadow: 0 0 10px cyan; margin-bottom: 40px; text-align: center; border-bottom: 2px dashed rgba(0, 255, 255, 0.3); padding-bottom: 10px; width: 100%; }
-  .data-panel { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(0, 255, 255, 0.3); padding: 30px; border-radius: 8px; width: 100%; line-height: 1.6; color: #94A3B8; }
-  .data-panel h3 { color: cyan; margin-bottom: 15px; }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+  }
 
-  /* CREATOR CARD */
-  .creator-card { display: flex; background: rgba(2, 6, 23, 0.8); border: 1px solid cyan; border-radius: 8px; padding: 30px; gap: 30px; align-items: center; width: 100%; position: relative; overflow: hidden; }
-  .creator-photo { width: 150px; height: 150px; border-radius: 10px; border: 2px solid cyan; object-fit: cover; }
+  nav ul li a {
+    color: #94A3B8;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s;
+    font-family: Arial, sans-serif;
+  }
 
-  /* MODAL LOGIN */
-  .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000; }
-  .modal-content { background: rgba(2, 6, 23, 0.95); padding: 40px; width: 400px; border: 1px solid cyan; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); position: relative; }
-  .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 50px; background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), transparent); animation: scan 3s linear infinite; pointer-events: none; }
-  @keyframes scan { 0% { top: -50px; } 100% { top: 100%; } }
-  .close-btn { position: absolute; top: 15px; right: 20px; color: cyan; font-size: 1.5rem; cursor: pointer; }
-  .tabs { display: flex; margin-bottom: 25px; border-bottom: 1px solid rgba(0, 255, 255, 0.3); }
-  .tab-btn { flex: 1; background: transparent; border: none; color: #94A3B8; padding: 10px; cursor: pointer; font-weight: bold; }
-  .tab-btn.active { color: cyan; border-bottom: 2px solid cyan; }
-  .form-container { display: none; }
-  .form-container.active { display: block; animation: fadeIn 0.4s ease-in-out; }
-  .input-group { margin-bottom: 15px; }
-  .input-group label { display: block; font-size: 0.8rem; color: cyan; margin-bottom: 5px; }
-  .modal-content input { width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 255, 255, 0.3); color: white; outline: none; }
+  nav ul li a:hover {
+    color: cyan;
+    text-shadow: 0 0 8px cyan;
+  }
 
-  /* ALARM & WARP EFFECTS */
-  .alarm-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 0, 0, 0.4); z-index: 999; display: none; pointer-events: none; }
-  @keyframes alarmPulse { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.6; } }
-  body.system-alarm .alarm-overlay { display: block; animation: alarmPulse 0.5s infinite; }
-  body.system-alarm .modal-content { border-color: red !important; animation: shake 0.3s; }
-  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+  /* HERO SECTION (BERANDA) */
+  .hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    perspective: 1000px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 0 20px;
+  }
 
-  /* WARP ANIMATION (FOR SUCCESS) */
-  .warp-active {
-    animation: warpEffect 1.5s ease-in forwards !important;
-  }
-  @keyframes warpEffect {
-    0% { transform: scale(1); filter: blur(0); }
-    100% { transform: scale(5); filter: blur(20px); opacity: 0; }
-  }
+  .logo {
+    width: 450px; 
+    max-width: 80%;
+    transition: transform 0.1s ease-out;
+    filter: drop-shadow(0 0 30px cyan);
+  }
 
-  @media screen and (max-width: 768px) {
-    nav { flex-direction: column; top: 50px; }
-    h1 { font-size: 2.2rem; }
-  }
+  h1 {
+    font-size: 3.5rem;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+  }
+
+  .subtitle {
+    color: #94A3B8;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+  }
+
+  /* BUTTON */
+  .btn {
+    padding: 12px 35px;
+    border-radius: 4px;
+    border: 1px solid cyan;
+    background: rgba(0, 255, 255, 0.1);
+    color: cyan;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .btn:hover {
+    background: cyan;
+    color: #020617;
+    box-shadow: 0 0 20px cyan;
+  }
+
+  /* ========================================= */
+  /* SECTION BARU: MODUL & TENTANG             */
+  /* ========================================= */
+  .content-section {
+    min-height: 100vh;
+    padding: 100px 20px 50px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-family: Arial, sans-serif;
+    font-size: 2.5rem;
+    color: white;
+    text-shadow: 0 0 10px cyan;
+    margin-bottom: 40px;
+    text-align: center;
+    border-bottom: 2px dashed rgba(0, 255, 255, 0.3);
+    padding-bottom: 10px;
+    width: 100%;
+  }
+
+  /* PANEL DATA CP IPS */
+  .data-panel {
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05);
+    width: 100%;
+    line-height: 1.6;
+    color: #94A3B8;
+  }
+
+  .data-panel h3 {
+    color: cyan;
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
+  }
+
+  .data-panel p {
+    margin-bottom: 15px;
+  }
+
+  .data-panel ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+  }
+
+  /* KARTU KREATOR (TENTANG) */
+  .creator-card {
+    display: flex;
+    background: rgba(2, 6, 23, 0.8);
+    border: 1px solid cyan;
+    border-radius: 8px;
+    padding: 30px;
+    gap: 30px;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .creator-card::before {
+    content: 'ID-KREATOR';
+    position: absolute;
+    top: 10px;
+    right: -20px;
+    transform: rotate(45deg);
+    background: cyan;
+    color: #020617;
+    padding: 2px 30px;
+    font-weight: bold;
+    font-size: 0.8rem;
+  }
+
+  .creator-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+    border: 2px solid cyan;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+    object-fit: cover;
+  }
+
+  .creator-info h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 5px cyan;
+    font-family: Arial, sans-serif;
+  }
+
+  .creator-info h4 {
+    color: cyan;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+
+  .creator-info p {
+    color: #94A3B8;
+    line-height: 1.5;
+  }
+
+  /* MODAL HOLOGRAM */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: rgba(2, 6, 23, 0.95);
+    padding: 40px;
+    width: 400px;
+    border: 1px solid cyan;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 255, 255, 0.3), transparent);
+    opacity: 0.5;
+    animation: scan 3s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes scan {
+    0% { top: -50px; }
+    100% { top: 100%; }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: cyan;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+    z-index: 10;
+  }
+
+  .close-btn:hover {
+    color: white;
+    text-shadow: 0 0 10px white;
+  }
+
+  .tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #94A3B8;
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: 0.3s;
+  }
+
+  .tab-btn.active {
+    color: cyan;
+    border-bottom: 2px solid cyan;
+    text-shadow: 0 0 5px cyan;
+  }
+
+  .form-container {
+    display: none;
+  }
+
+  .form-container.active {
+    display: block;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: cyan;
+    margin-bottom: 5px;
+  }
+
+  .modal-content input {
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    color: white;
+    outline: none;
+    font-family: 'Courier New', Courier, monospace;
+    transition: 0.3s;
+  }
+
+  .modal-content input:focus {
+    border-color: cyan;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+  }
+
+  .modal-content .btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+/* ========================================= */
+  /* MODE ALARM SCI-FI (Hanya Aktif Saat Error) */
+  /* ========================================= */
+  
+  /* 1. Efek Berdenyut Merah pada Layar (Overlay) */
+  .alarm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.4); /* Merah transparan */
+    z-index: 999; /* Di atas segalanya, di bawah modal */
+    display: none; /* Disembunyikan secara default */
+    opacity: 0;
+    pointer-events: none; /* Klik bisa menembus overlay ini */
+  }
+
+  /* Animasi Denyut Alarm */
+  @keyframes alarmPulse {
+    0% { opacity: 0.1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.1; }
+  }
+
+  /* Perubahan Gaya Saat Body Punya Class 'system-alarm' */
+  body.system-alarm .alarm-overlay {
+    display: block;
+    animation: alarmPulse 0.8s infinite;
+  }
+
+  /* 2. Ubah Warna Elemen UI Menjadi Merah Flashing */
+  @keyframes textFlashRed {
+    0%, 100% { color: red; text-shadow: 0 0 10px red; }
+    50% { color: white; text-shadow: none; }
+  }
+
+  body.system-alarm .status-bar,
+  body.system-alarm nav .brand,
+  body.system-alarm .section-title,
+  body.system-alarm .data-panel h3,
+  body.system-alarm .close-btn,
+  body.system-alarm .tab-btn.active,
+  body.system-alarm .input-group label {
+    color: red !important;
+    border-color: red !important;
+    text-shadow: 0 0 10px red !important;
+  }
+  
+  body.system-alarm .input-group label {
+    animation: textFlashRed 0.8s infinite;
+  }
+
+  /* 3. Ubah Modal & Tombol Jadi Merah */
+  body.system-alarm .modal-content {
+    border-color: red !important;
+    box-shadow: 0 0 50px red, inset 0 0 20px rgba(255, 0, 0, 0.3) !important;
+    animation: shake 0.3s; /* Efek bergetar saat error muncul */
+  }
+
+  body.system-alarm .scanline {
+    background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.3), transparent) !important;
+  }
+
+  body.system-alarm .btn {
+    border-color: red !important;
+    color: red !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+    box-shadow: 0 0 10px red !important;
+  }
+
+  body.system-alarm .btn:hover {
+    background: red !important;
+    color: white !important;
+    box-shadow: 0 0 20px red !important;
+  }
+
+  /* Animasi Bergetar (Shake) */
+  @keyframes shake {
+    0% { transform: translate(1px, 1px); }
+    10% { transform: translate(-1px, -2px); }
+    20% { transform: translate(-3px, 0px); }
+    30% { transform: translate(3px, 2px); }
+    40% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 2px); }
+    60% { transform: translate(-3px, 1px); }
+    70% { transform: translate(3px, 1px); }
+    80% { transform: translate(-1px, -1px); }
+    90% { transform: translate(1px, 2px); }
+    100% { transform: translate(1px, -2px); }
+  }
+
+  /* Sembunyikan partikel cyan saat alarm, kita akan buat merah di JS */
+  body.system-alarm #canvas {
+    opacity: 0.5;
+  }
+  /* MEDIA QUERIES MOBILE */
+  @media screen and (max-width: 768px) {
+    .status-bar {
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.7rem;
+      padding: 5px;
+    }
+
+    nav {
+      top: 50px;
+      padding: 15px 20px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    nav ul {
+      gap: 15px;
+      font-size: 0.85rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+    }
+
+    .creator-card {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
 </style>
 </head>
 <body>
-
 <div class="alarm-overlay"></div>
 <canvas id="canvas"></canvas>
 
 <div class="status-bar">
-  <div>SISTEM: <span id="status-text" style="color: white;">ONLINE</span> | KONEKSI SECURE</div>
-  <div id="live-datetime">--:--:-- | --/--/----</div>
+  <div>SISTEM: <span style="color: white;">ONLINE</span> | KONEKSI SECURE</div>
+  <div id="live-datetime">--:--:-- | --/--/----</div>
 </div>
 
 <nav>
-  <div class="brand">IPS LABX</div>
-  <ul>
-    <li><a href="#beranda">BERANDA</a></li>
-    <li><a href="#modul">MODUL</a></li>
-    <li><a href="#tentang">TENTANG</a></li>
-  </ul>
+  <div class="brand">IPS LABX</div>
+  <ul>
+    <li><a href="#beranda">BERANDA</a></li>
+    <li><a href="#modul">MODUL</a></li>
+    <li><a href="#tentang">TENTANG</a></li>
+  </ul>
 </nav>
 
 <section class="hero" id="beranda">
-  <img src="logo.png" class="logo" id="logo-hero" alt="IPS LABX Logo">
-  <h1>IPS LABX</h1>
-  <p class="subtitle">SISTEM EKSPLORASI RUANG, WAKTU & MASYARAKAT</p>
-  <button class="btn" id="btnMulai">Inisiasi Akses</button>
+  <img src="logo.png" class="logo" id="logo" alt="IPS LABX Logo">
+  <h1>IPS LABX</h1>
+  <p class="subtitle">SISTEM EKSPLORASI RUANG, WAKTU & MASYARAKAT</p>
+  <button class="btn" id="btnMulai">Inisiasi Akses</button>
 </section>
 
 <section class="content-section" id="modul">
-  <h2 class="section-title">DATA MODUL IPS</h2>
-  <div class="data-panel">
-    <h3>> CAPAIAN PEMBELAJARAN (FASE D)</h3>
-    <p>Memahami ruang letak geografis dan pengaruhnya terhadap kondisi alam, serta kehidupan sosial, ekonomi, dan politik.</p>
-    <p style="color: cyan; text-align: center; margin-top: 20px; font-weight: bold;">[ LOGIN UNTUK MATERI LENGKAP ]</p>
-  </div>
+  <h2 class="section-title">DATA MODUL IPS</h2>
+  
+  <div class="data-panel">
+    <h3>> CAPAIAN PEMBELAJARAN (FASE D)</h3>
+    <p>Pada akhir fase D, peserta didik memahami ruang letak geografis dan pengaruhnya terhadap kondisi alam, serta kehidupan sosial, ekonomi, dan politik.</p>
+    
+    <h3>> ELEMEN PEMAHAMAN</h3>
+    <ul>
+      <li><strong>Keruangan dan Konektivitas:</strong> Memahami letak geografis, cuaca, iklim, dan dampaknya.</li>
+      <li><strong>Perkembangan Masyarakat:</strong> Mengidentifikasi dinamika sejarah dari masa praaksara hingga era modern.</li>
+      <li><strong>Interaksi Sosial & Ekonomi:</strong> Menganalisis perilaku manusia dalam memenuhi kebutuhan hidup sehari-hari.</li>
+    </ul>
+
+    <p style="color: cyan; text-align: center; margin-top: 20px; font-weight: bold;">
+      [ UNTUK MENGAKSES MATERI LENGKAP, SILAKAN LOGIN KE SISTEM ]
+    </p>
+  </div>
 </section>
 
 <section class="content-section" id="tentang">
-  <h2 class="section-title">IDENTIFIKASI KREATOR</h2>
-  <div class="creator-card">
-    <img src="fotoid.png" alt="Foto Kreator" class="creator-photo">
-    <div class="creator-info">
-      <h3>Anugerah Bhakti Kuncoro</h3>
-      <h4>Peneliti Utama / Web Developer</h4>
-      <p>"Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran IPS melalui pendekatan digital futuristik."</p>
-    </div>
-  </div>
+  <h2 class="section-title">IDENTIFIKASI KREATOR</h2>
+  
+  <div class="creator-card">
+    <img src="fotoid.png" alt="Foto Kreator" class="creator-photo">
+    
+    <div class="creator-info">
+      <h3>Anugerah Bhakti Kuncoro</h3>
+      <h4>Peneliti Utama / Web Developer</h4>
+      <p>
+        "Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran Ilmu Pengetahuan Sosial. Dengan pendekatan gamifikasi dan UI futuristik, saya berharap platform ini dapat meningkatkan minat eksplorasi data keruangan, sejarah, dan sosiologi bagi generasi digital."
+      </p>
+      <p style="margin-top: 10px; font-size: 0.85rem;">
+        > Sistem Diciptakan: 2026<br>
+        > Basis Operasi: Indonesia
+      </p>
+    </div>
+  </div>
 </section>
 
 <div class="modal" id="modal">
-  <div class="modal-content">
-    <div class="scanline"></div>
-    <span class="close-btn" id="closeModal">&times;</span>
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
-      <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
-    </div>
-    <div id="form-login" class="form-container active">
-      <div class="input-group"><label>> EMAIL PENELITI</label><input type="email" id="loginEmail" placeholder="Masukkan Email..."></div>
-      <div class="input-group"><label>> KATA SANDI</label><input type="password" id="loginPassword" placeholder="********"></div>
-      <button class="btn" id="btnMasukSistem">Masuk Sistem</button>
-    </div>
-    <div id="form-register" class="form-container">
-      <div class="input-group"><label>> NAMA PENELITI</label><input type="text" id="regNama" placeholder="Nama Lengkap..."></div>
-      <div class="input-group"><label>> EMAIL</label><input type="email" id="regEmail" placeholder="email@contoh.com"></div>
-      <div class="input-group"><label>> SANDI BARU</label><input type="password" id="regPassword" placeholder="Min. 6 Karakter..."></div>
-      <button class="btn" id="btnBuatKredensial">Buat Kredensial</button>
-    </div>
-  </div>
+  <div class="modal-content">
+    <div class="scanline"></div>
+    <span class="close-btn" id="closeModal">&times;</span>
+    
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">LOGIN</button>
+      <button class="tab-btn" onclick="switchTab('register')">REGISTER</button>
+    </div>
+
+    <div id="form-login" class="form-container active">
+      <div class="input-group">
+        <label>> EMAIL PENELITI</label>
+        <input type="email" id="loginEmail" placeholder="Masukkan Email...">
+      </div>
+      <div class="input-group">
+        <label>> KATA SANDI</label>
+        <input type="password" id="loginPassword" placeholder="********">
+      </div>
+      <button class="btn" id="btnMasukSistem">Masuk Sistem</button>
+    </div>
+
+    <div id="form-register" class="form-container">
+      <div class="input-group">
+        <label>> NAMA PENELITI</label>
+        <input type="text" id="regNama" placeholder="Nama Lengkap...">
+      </div>
+      <div class="input-group">
+        <label>> EMAIL / NISN (Gunakan Email)</label>
+        <input type="email" id="regEmail" placeholder="email@contoh.com">
+      </div>
+      <div class="input-group">
+        <label>> KODE SANDI BARU</label>
+        <input type="password" id="regPassword" placeholder="Min. 6 Karakter...">
+      </div>
+      <button class="btn" id="btnBuatKredensial">Buat Kredensial</button>
+    </div>
+    
+  </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// 1. AUDIO SYSTEM
-const sfxClick = new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'); 
-const sfxError = new Audio('https://www.soundjay.com/buttons/sounds/beep-10.mp3'); 
-const sfxSuccess = new Audio('https://www.soundjay.com/buttons/sounds/button-09.mp3');
-
-// SAPU JAGAT: Semua klik bunyi
-document.addEventListener('click', (e) => {
-  if(e.target.closest('button, .btn, a, .tab-btn, .close-btn')) {
-    sfxClick.cloneNode(true).play().catch(()=>{});
-  }
-});
-
+// Variabel Status Sistem (PENTING untuk sinkronisasi efek)
 let isAlarmActive = false;
 
-// 2. CLOCK & UI
-function updateDateTime() {
-  const now = new Date();
-  document.getElementById('live-datetime').innerText = now.toLocaleTimeString('id-ID') + " | " + now.toLocaleDateString('id-ID');
-}
-setInterval(updateDateTime, 1000);
+// ==========================================
+// 1. LOGIKA UI, JAM & PARTIKEL (ANTI-MOGOK)
+// ==========================================
+try {
+  // A. LOGIKA JAM
+  function updateDateTime() {
+    const now = new Date();
+    const time = now.toLocaleTimeString('id-ID', { hour12: false });
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
+    
+    // Ubah warna jam juga saat alarm
+    if (isAlarmActive) {
+      document.getElementById('live-datetime').style.color = 'red';
+      document.getElementById('live-datetime').style.textShadow = '0 0 10px red';
+    } else {
+      document.getElementById('live-datetime').style.color = ''; // Reset ke cyan (CSS)
+      document.getElementById('live-datetime').style.textShadow = '';
+    }
+  }
+  setInterval(updateDateTime, 1000);
+  updateDateTime();
 
-window.switchTab = (tabId) => {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
-  if(tabId === 'login') {
-    document.querySelectorAll('.tab-btn')[0].classList.add('active');
-    document.getElementById('form-login').classList.add('active');
-  } else {
-    document.querySelectorAll('.tab-btn')[1].classList.add('active');
-    document.getElementById('form-register').classList.add('active');
-  }
-};
+  // B. LOGIKA TAB MODAL
+  window.switchTab = function(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+    if(tabId === 'login') {
+      document.querySelectorAll('.tab-btn')[0].classList.add('active');
+      document.getElementById('form-login').classList.add('active');
+    } else {
+      document.querySelectorAll('.tab-btn')[1].classList.add('active');
+      document.getElementById('form-register').classList.add('active');
+    }
+  };
 
-const modal = document.getElementById("modal");
-document.getElementById("btnMulai").onclick = () => modal.style.display = "flex";
-document.getElementById("closeModal").onclick = () => modal.style.display = "none";
+  // C. MODAL BUKA/TUTUP
+  const btnMulai = document.getElementById("btnMulai");
+  const modal = document.getElementById("modal");
+  const closeModal = document.getElementById("closeModal");
+  if(btnMulai) btnMulai.addEventListener("click", () => modal.style.display = "flex");
+  if(closeModal) closeModal.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
 
-// 3. PARTICLE SYSTEM
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-let particles = [];
-function initParticles() {
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  particles = [];
-  for(let i=0; i<150; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-0.5)*2, vy:(Math.random()-0.5)*2});
-}
-initParticles();
-window.onresize = initParticles;
+  // D. ANIMASI PARTIKEL (DIMODIFIKASI UNTUK WARNA MERAH)
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
 
-function animate() {
-  ctx.clearRect(0,0,canvas.width, canvas.height);
-  particles.forEach(p => {
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0 || p.x>canvas.width) p.vx*=-1; if(p.y<0 || p.y>canvas.height) p.vy*=-1;
-    ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2);
-    ctx.fillStyle = isAlarmActive ? "red" : "cyan"; ctx.fill();
-  });
-  requestAnimationFrame(animate);
-}
-animate();
+  let mouse = { x: null, y: null };
+  if (window.innerWidth > 768) {
+    document.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+    document.addEventListener("mouseleave", () => { mouse.x = null; mouse.y = null; });
+  }
 
-// 4. SUPABASE & LOGIN LOGIC
-const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
-const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
-const dbClient = supabase.createClient(supabaseUrl, supabaseKey);
+  let particles = [];
+  let particleCount = window.innerWidth < 768 ? 80 : 250; 
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5
+    });
+  }
 
-// LOGIN FUNCTION
-document.getElementById("btnMasukSistem").onclick = async () => {
-  const email = document.getElementById("loginEmail").value;
-  const password = document.getElementById("loginPassword").value;
-  
-  const btn = document.getElementById("btnMasukSistem");
-  btn.innerText = "VERIFIKASI...";
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let mouseRadius = 150;
+    for (let i = 0; i < particles.length; i++) {
+      let p = particles[i];
+      p.x += p.vx; p.y += p.vy;
+      let distMouse = 1000; 
+      if (mouse.x !== null && mouse.y !== null) {
+        let dxMouse = p.x - mouse.x; let dyMouse = p.y - mouse.y;
+        distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        if (distMouse < 120) { p.x += (mouse.x - p.x) * 0.03; p.y += (mouse.y - p.y) * 0.03; }
+      }
+      if (distMouse < mouseRadius) {
+        for (let j = i; j < particles.length; j++) {
+          let p2 = particles[j];
+          let dx = p.x - p2.x; let dy = p.y - p2.y; let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 90) {
+            ctx.beginPath();
+            
+            // --- MODIFIKASI WARNA GARIS PARTIKEL (ALARM) ---
+            if (isAlarmActive) {
+              ctx.strokeStyle = `rgba(255, 0, 0, ${(1 - dist / 90) * 0.8})`; // Merah
+            } else {
+              ctx.strokeStyle = `rgba(0, 255, 255, ${(1 - dist / 90) * 0.8})`; // Cyan (Normal)
+            }
+            
+            ctx.lineWidth = 1; ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+          }
+        }
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); 
+        
+        // --- MODIFIKASI WARNA TITIK AKTIF (ALARM) ---
+        ctx.fillStyle = isAlarmActive ? "rgba(255, 100, 100, 0.8)" : "white"; 
+        
+        ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); 
+        
+        // --- MODIFIKASI WARNA TITIK PASIF (ALARM) ---
+        ctx.fillStyle = isAlarmActive ? "rgba(255, 0, 0, 0.4)" : "rgba(0, 255, 255, 0.4)"; 
+        
+        ctx.fill();
+      }
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
 
-  const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
+} catch (e) { console.error("Error pada Logika UI:", e); }
 
-  if (error) {
-    // GAGAL: ALARM MERAH + BALIK KE BERANDA
-    modal.style.display = "none";
-    isAlarmActive = true;
-    document.body.classList.add('system-alarm');
-    sfxError.play();
-    setTimeout(() => {
-      isAlarmActive = false;
-      document.body.classList.remove('system-alarm');
-      btn.innerText = "Masuk Sistem";
-    }, 3000);
-  } else {
-    // BERHASIL: SUARA CEWEK + ANIMASI WARP
-    sfxSuccess.play();
-    const name = data.user.user_metadata.full_name || "Researcher";
-    
-    // Voice Assistant (Wanita Feminim)
-    const msg = new SpeechSynthesisUtterance(`Welcome Mister ${name} in the IPS LAB X.`);
-    const voices = window.speechSynthesis.getVoices();
-    msg.voice = voices.find(v => v.name.includes("Samantha") || v.name.includes("Google US English") || v.lang === "en-US") || voices[0];
-    msg.pitch = 1.1; msg.rate = 0.9;
-    window.speechSynthesis.speak(msg);
+// ==========================================
+// 2. SISTEM DATABASE SUPABASE & EFEK ALARM
+// ==========================================
+try {
+  if (typeof window.supabase === 'undefined') { throw new Error("Library gagal dimuat."); }
 
-    // Animasi Warp
-    document.getElementById("logo-hero").classList.add("warp-active");
-    document.body.style.overflow = "hidden";
-    
-    setTimeout(() => { window.location.href = "dashboard.html"; }, 3500);
-  }
-};
+  const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
+  const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
+  
+  // NAMA VARIABEL dbClient AGAR TIDAK BENTROK
+  const dbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-// REGISTER FUNCTION
-document.getElementById("btnBuatKredensial").onclick = async () => {
-  const nama = document.getElementById("regNama").value;
-  const email = document.getElementById("regEmail").value;
-  const password = document.getElementById("regPassword").value;
-  const { error } = await dbClient.auth.signUp({ email, password, options: { data: { full_name: nama } } });
-  if(error) alert(error.message); else { alert("Kredensial Dibuat!"); switchTab('login'); }
-};
+  const btnBuatKredensial = document.getElementById("btnBuatKredensial");
+  const btnMasukSistem = document.getElementById("btnMasukSistem");
+
+  // REGISTER
+  if (btnBuatKredensial) {
+    btnBuatKredensial.addEventListener("click", async () => {
+      const nama = document.getElementById("regNama").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      if(!email || !password || !nama) return alert("Harap isi semua data!");
+      btnBuatKredensial.innerText = "Mendaftarkan...";
+      const { data, error } = await dbClient.auth.signUp({
+        email: email, password: password, options: { data: { full_name: nama } }
+      });
+      if (error) alert("GAGAL: " + error.message);
+      else { alert("KREDENSIAL BERHASIL DIBUAT! Silakan Login."); switchTab('login'); }
+      btnBuatKredensial.innerText = "Buat Kredensial";
+    });
+  }
+
+// --- MODIFIKASI FUNGSI LOGIN (TUTUP MODAL & ALARM FULL LAYAR) ---
+  if (btnMasukSistem) {
+    btnMasukSistem.addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      // Jika input kosong, ubah teks tombol saja (jangan pakai alert)
+      if(!email || !password) {
+        btnMasukSistem.innerText = "⚠️ ISI EMAIL DAN SANDI!";
+        setTimeout(() => btnMasukSistem.innerText = "Masuk Sistem", 2000);
+        return;
+      }
+      
+      btnMasukSistem.innerText = "Memverifikasi...";
+
+      const { data, error } = await dbClient.auth.signInWithPassword({
+        email: email, password: password
+      });
+
+  if (error) {
+        // 1. TUTUP MODAL
+        document.getElementById("modal").style.display = "none";
+
+        // 2. AKTIFKAN ALARM & MAINKAN SUARA ERROR
+        isAlarmActive = true; 
+        document.body.classList.add('system-alarm'); 
+        sfxError.play();
+
+        // 3. MATIKAN ALARM SETELAH 3 DETIK
+        setTimeout(() => {
+          isAlarmActive = false;
+          document.body.classList.remove('system-alarm');
+          btnMasukSistem.innerText = "Masuk Sistem"; 
+        }, 3000);
+
+} else {
+        // --- JIKA BERHASIL LOGIN (MODE ASISTEN WANITA / F.R.I.D.A.Y) ---
+        btnMasukSistem.innerText = "AKSES DITERIMA...";
+        
+        const userName = data.user.user_metadata?.full_name || "Researcher";
+        const kalimat = `Welcome in the IPS LAB X.`;
+        
+        const robotVoice = new SpeechSynthesisUtterance(kalimat);
+        robotVoice.lang = 'en-US'; 
+        robotVoice.pitch = 1.1; // Nada 1.1 memberikan kesan feminim dan manusiawi
+        robotVoice.rate = 0.95; // Kecepatan bicara natural (tidak terlalu lambat)
+
+        // Trik mencari suara wanita terbaik di sistem operasi kamu
+        const voices = window.speechSynthesis.getVoices();
+        const femaleVoice = voices.find(voice => 
+          voice.lang.includes('en') && 
+          (voice.name.includes('Female') || voice.name.includes('Samantha') || voice.name.includes('Zira') || voice.name.includes('Victoria'))
+        );
+        
+        // Jika ketemu suara wanita, gunakan suara itu
+        if (femaleVoice) {
+          robotVoice.voice = femaleVoice;
+        }
+
+        window.speechSynthesis.speak(robotVoice);
+        
+        // Tunggu sekitar 4 detik sebelum pindah halaman
+        setTimeout(() => {
+          window.location.href = "dashboard.html"; 
+        }, 4000); 
+      }
+    });
+  }
+} catch (err) { console.error("Supabase tidak aktif:", err.message); }
 </script>
+
 </body>
 </html>
