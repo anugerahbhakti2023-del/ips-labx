@@ -815,7 +815,7 @@ try {
         btnMasukSistem.innerText = "AKSES DITERIMA...";
         
         const userName = data.user.user_metadata?.full_name || "Researcher";
-        const kalimat = `Welcome Mister ${userName} in the IPS LAB X.`;
+        const kalimat = `Welcome in the IPS LAB X.`;
         
         const robotVoice = new SpeechSynthesisUtterance(kalimat);
         robotVoice.lang = 'en-US'; 
