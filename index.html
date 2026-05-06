@@ -18,43 +18,21 @@
 
   /* EFEK KLIK (RIPPLE) */
   .click-ripple {
-    position: fixed;
-    border-radius: 50%;
-    border: 2px solid cyan;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
+    position: fixed; border-radius: 50%; border: 2px solid cyan;
+    pointer-events: none; transform: translate(-50%, -50%);
     animation: rippleAnim 0.5s ease-out forwards;
-    z-index: 9999;
-    box-shadow: 0 0 10px cyan, inset 0 0 10px cyan;
+    z-index: 9999; box-shadow: 0 0 10px cyan, inset 0 0 10px cyan;
   }
-  @keyframes rippleAnim {
-    0% { width: 0; height: 0; opacity: 1; }
-    100% { width: 80px; height: 80px; opacity: 0; }
-  }
+  @keyframes rippleAnim { 0% { width: 0; height: 0; opacity: 1; } 100% { width: 80px; height: 80px; opacity: 0; } }
 
   /* STATUS BAR */
   .status-bar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 8px 20px;
-    background: rgba(2, 6, 23, 0.95);
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: cyan;
-    border-bottom: 1px solid rgba(0, 255, 255, 0.3);
-    z-index: 101;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    backdrop-filter: blur(5px);
+    position: fixed; top: 0; width: 100%; padding: 8px 20px;
+    background: rgba(2, 6, 23, 0.95); display: flex; justify-content: space-between;
+    font-size: 0.8rem; color: cyan; border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+    z-index: 101; text-transform: uppercase; letter-spacing: 1px; backdrop-filter: blur(5px);
   }
-
-  .custom-audio-btn {
-    cursor: pointer;
-    color: #eab308; /* Warna kuning agar terlihat bisa diklik */
-    transition: 0.3s;
-  }
+  .custom-audio-btn { cursor: pointer; color: #eab308; transition: 0.3s; }
   .custom-audio-btn:hover { color: white; text-shadow: 0 0 10px #eab308; }
 
   /* NAVBAR */
@@ -133,7 +111,7 @@
   body.system-alarm .scanline { background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.3), transparent) !important; }
   body.system-alarm .btn { border-color: red !important; color: red !important; background: rgba(255, 0, 0, 0.1) !important; box-shadow: 0 0 10px red !important; }
   body.system-alarm .btn:hover { background: red !important; color: white !important; box-shadow: 0 0 20px red !important; }
-  @keyframes shake { 0% { transform: translate(1px, 1px); } 10% { transform: translate(-1px, -2px); } 20% { transform: translate(-3px, 0px); } 30% { transform: translate(3px, 2px); } 40% { transform: translate(1px, -1px); } 50% { transform: translate(-1px, 2px); } 60% { transform: translate(-3px, 1px); } 70% { transform: translate(3px, 1px); } 80% { transform: translate(-1px, -1px); } 90% { transform: translate(1px, 2px); } 100% { transform: translate(1px, -2px); } }
+  @keyframes shake { 0%, 80% { transform: translate(-1px, -1px); } 10%, 90% { transform: translate(1px, 2px); } 20%, 60% { transform: translate(-3px, 0px); } 30%, 70% { transform: translate(3px, 2px); } }
   body.system-alarm #canvas { opacity: 0.5; }
 
   @media screen and (max-width: 768px) {
@@ -244,14 +222,16 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ==========================================
-// AUDIO SYSTEM & CUSTOM CLICK UPLOAD
+// AUDIO SYSTEM & GITHUB PAGES AUDIO
 // ==========================================
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
+// Menggunakan file dari GitHub Repo sebagai default
+let githubAudio = new Audio('scfi-click.wav');
 let customAudio = null;
 
-// Mengatur File Upload Suara Klik
+// Fitur ganti audio secara manual (jika user masih ingin ganti via tombol)
 document.getElementById('uploadClick').addEventListener('change', function(event) {
   const file = event.target.files[0];
   if (file) {
@@ -262,64 +242,52 @@ document.getElementById('uploadClick').addEventListener('change', function(event
 });
 
 function playClickSound() {
-  // Jika user sudah upload suara custom, gunakan itu
-  if (customAudio) {
-    customAudio.currentTime = 0; // Reset ke awal
-    customAudio.play().catch(e => console.log("Audio play di-block browser"));
-    return;
-  }
+  // Gunakan custom upload jika ada, kalau tidak ada gunakan dari GitHub (scfi-click.wav)
+  let audioToPlay = customAudio ? customAudio : githubAudio;
   
-  // Jika belum, gunakan Synth Audio Bawaan
-  if (audioCtx.state === 'suspended') audioCtx.resume();
-  const osc = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-  gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-  osc.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.1);
+  audioToPlay.currentTime = 0; 
+  audioToPlay.play().catch(e => {
+    // FALLBACK: Jika browser memblokir atau file .wav gagal dimuat dari GitHub, gunakan Web Audio API Synth
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+  });
 }
 
 function playErrorSound() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
-  const osc = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
+  const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
   osc.type = 'sawtooth';
   osc.frequency.setValueAtTime(150, audioCtx.currentTime);
   osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.3);
   gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-  osc.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.3);
+  osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.3);
 }
 
 // Visual Ripple & Suara saat klik
 document.addEventListener('click', (e) => {
-  // Cegah bunyi dobel kalau klik di label upload
   if(e.target.tagName.toLowerCase() === 'label' && e.target.htmlFor === 'uploadClick') return;
-  
   playClickSound();
-
   const ripple = document.createElement('div');
   ripple.className = 'click-ripple';
-  ripple.style.left = e.clientX + 'px';
-  ripple.style.top = e.clientY + 'px';
+  ripple.style.left = e.clientX + 'px'; ripple.style.top = e.clientY + 'px';
   document.body.appendChild(ripple);
-  
   setTimeout(() => { ripple.remove(); }, 500);
 });
 
 // Load Voice Assistent Data
 let voices = [];
-window.speechSynthesis.onvoiceschanged = () => {
-  voices = window.speechSynthesis.getVoices();
-};
+window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
 
 // ==========================================
 // 1. LOGIKA UI, JAM & PARTIKEL
@@ -343,8 +311,7 @@ try {
       document.getElementById('live-datetime').style.textShadow = '';
     }
   }
-  setInterval(updateDateTime, 1000);
-  updateDateTime();
+  setInterval(updateDateTime, 1000); updateDateTime();
 
   window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -368,8 +335,7 @@ try {
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
   function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas(); window.addEventListener("resize", resizeCanvas);
 
   let mouse = { x: null, y: null };
   if (window.innerWidth > 768) {
@@ -385,15 +351,10 @@ try {
 
   function animate() {
     if(isWarping) {
-        ctx.fillStyle = "rgba(2, 6, 23, 0.2)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    } else {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+        ctx.fillStyle = "rgba(2, 6, 23, 0.2)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    let mouseRadius = 150;
-    let centerX = canvas.width / 2;
-    let centerY = canvas.height / 2;
+    let mouseRadius = 150; let centerX = canvas.width / 2; let centerY = canvas.height / 2;
 
     for (let i = 0; i < particles.length; i++) {
       let p = particles[i];
@@ -436,7 +397,6 @@ try {
     requestAnimationFrame(animate);
   }
   animate();
-
 } catch (e) { console.error("Error pada Logika UI:", e); }
 
 // ==========================================
@@ -488,34 +448,22 @@ try {
         }, 3000);
 
       } else {
-        // --- BERHASIL: ANIMASI WARP DAN VOICE JEPANG ---
         btnMasukSistem.innerText = "AKSES DITERIMA...";
         document.getElementById("modal").style.display = "none";
         isWarping = true; 
         
-        // Teks Jepang: IPS LAB X へようこそ。ワープドライブを起動します。
-        // Dibaca: Ai-Pi-Esu Rabo Ekkusu e youkoso. Waapu doraibu o kidou shimasu.
         const kalimatJP = `アイピーエス ラボ エックス へ ようこそ。ワープドライブを起動します。`;
-        
         const robotVoice = new SpeechSynthesisUtterance(kalimatJP);
-        robotVoice.lang = 'ja-JP'; 
-        robotVoice.pitch = 1.1; 
-        robotVoice.rate = 1.0; 
+        robotVoice.lang = 'ja-JP'; robotVoice.pitch = 1.1; robotVoice.rate = 1.0; 
 
         if (voices.length === 0) voices = window.speechSynthesis.getVoices();
-        
-        // Cari engine suara wanita bahasa Jepang (biasanya Kyoko, Haruka, Ayumi, atau Nanami)
         const jpFemaleVoice = voices.find(voice => 
           voice.lang.includes('ja') && 
           (voice.name.includes('Female') || voice.name.includes('Kyoko') || voice.name.includes('Haruka') || voice.name.includes('Nanami') || voice.name.includes('Ayumi'))
         );
-        
-        if (jpFemaleVoice) {
-          robotVoice.voice = jpFemaleVoice;
-        }
+        if (jpFemaleVoice) robotVoice.voice = jpFemaleVoice;
 
         window.speechSynthesis.speak(robotVoice);
-        
         setTimeout(() => { window.location.href = "dashboard.html"; }, 4500); 
       }
     });
