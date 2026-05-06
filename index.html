@@ -794,25 +794,45 @@ try {
         email: email, password: password
       });
 
-      if (error) {
-        // 1. HAPUS KODE alert() DAN LANGSUNG TUTUP MODAL (KEMBALI KE BERANDA)
+  if (error) {
+        // 1. TUTUP MODAL
         document.getElementById("modal").style.display = "none";
 
-        // 2. AKTIFKAN ALARM MERAH TOTAL
+        // 2. AKTIFKAN ALARM & MAINKAN SUARA ERROR
         isAlarmActive = true; 
         document.body.classList.add('system-alarm'); 
+        sfxError.play();
 
-        // 3. MATIKAN ALARM SETELAH 3 DETIK (Kembali Normal)
+        // 3. MATIKAN ALARM SETELAH 3 DETIK
         setTimeout(() => {
           isAlarmActive = false;
           document.body.classList.remove('system-alarm');
-          btnMasukSistem.innerText = "Masuk Sistem"; // Reset tombol
+          btnMasukSistem.innerText = "Masuk Sistem"; 
         }, 3000);
 
       } else {
-        // Jika berhasil, langsung alihkan tanpa alert
+        // --- JIKA BERHASIL LOGIN (MODE ROBOT SCI-FI) ---
         btnMasukSistem.innerText = "AKSES DITERIMA...";
-        window.location.href = "dashboard.html"; 
+        
+        // 1. Ambil nama dari database (default ke "Researcher" jika kosong)
+        const userName = data.user.user_metadata?.full_name || "Researcher";
+        
+        // 2. Siapkan Kalimatnya
+        const kalimat = `Welcome Mister ${userName} in the IPS LAB X.`;
+        
+        // 3. Panggil Mesin Suara (Web Speech API)
+        const robotVoice = new SpeechSynthesisUtterance(kalimat);
+        robotVoice.lang = 'en-US'; // Pakai bahasa Inggris agar pelafalannya keren
+        robotVoice.pitch = 0.3;    // Nada rendah (0 sampai 2) ala robot
+        robotVoice.rate = 0.8;     // Sedikit diperlambat agar terdengar dramatis
+
+        // 4. Mainkan Suaranya!
+        window.speechSynthesis.speak(robotVoice);
+        
+        // 5. Tunggu sampai robot selesai bicara baru pindah halaman (sekitar 4 detik)
+        setTimeout(() => {
+          window.location.href = "dashboard.html"; 
+        }, 4000); 
       }
     });
   }
