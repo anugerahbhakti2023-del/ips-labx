@@ -13,6 +13,7 @@
     background: #020617;
     color: white;
     overflow-x: hidden; 
+    overflow-y: hidden; /* Mencegah scroll bocor saat warp */
   }
   canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
@@ -67,17 +68,6 @@
   .content-section { min-height: 100vh; padding: 100px 20px 50px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 1000px; margin: 0 auto; transition: opacity 1s ease-out; }
   .section-title { font-family: Arial, sans-serif; font-size: 2.5rem; color: white; text-shadow: 0 0 10px cyan; margin-bottom: 40px; text-align: center; border-bottom: 2px dashed rgba(0, 255, 255, 0.3); padding-bottom: 10px; width: 100%; }
 
-  /* PANEL DATA CP IPS */
-  .data-panel { background: rgba(2, 6, 23, 0.8); border: 1px solid rgba(0, 255, 255, 0.3); padding: 30px; border-radius: 8px; box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05); width: 100%; line-height: 1.6; color: #94A3B8; }
-  .data-panel h3 { color: cyan; margin-bottom: 15px; font-family: Arial, sans-serif; }
-
-  /* KARTU KREATOR */
-  .creator-card { display: flex; background: rgba(2, 6, 23, 0.8); border: 1px solid cyan; border-radius: 8px; padding: 30px; gap: 30px; align-items: center; width: 100%; position: relative; overflow: hidden; }
-  .creator-card::before { content: 'ID-KREATOR'; position: absolute; top: 10px; right: -20px; transform: rotate(45deg); background: cyan; color: #020617; padding: 2px 30px; font-weight: bold; font-size: 0.8rem; }
-  .creator-photo { width: 150px; height: 150px; border-radius: 10px; border: 2px solid cyan; box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); object-fit: cover; }
-  .creator-info h3 { color: white; font-size: 1.8rem; margin-bottom: 5px; text-shadow: 0 0 5px cyan; font-family: Arial, sans-serif; }
-  .creator-info h4 { color: cyan; font-size: 1rem; margin-bottom: 15px; text-transform: uppercase; }
-
   /* MODAL HOLOGRAM */
   .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000; }
   .modal-content { background: rgba(2, 6, 23, 0.95); padding: 40px; width: 400px; border: 1px solid cyan; box-shadow: 0 0 30px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); position: relative; overflow: hidden; }
@@ -106,25 +96,59 @@
   body.system-alarm .modal-content { border-color: red !important; box-shadow: 0 0 50px red, inset 0 0 20px rgba(255, 0, 0, 0.3) !important; animation: shake 0.3s; }
   body.system-alarm .scanline { background: linear-gradient(to bottom, transparent, rgba(255, 0, 0, 0.3), transparent) !important; }
   body.system-alarm .btn { border-color: red !important; color: red !important; background: rgba(255, 0, 0, 0.1) !important; box-shadow: 0 0 10px red !important; }
-  
-  /* LOGO POP UP SAAT WARP */
+
+  /* ========================================= */
+  /* ANIMASI PESAWAT & WARP LOGO HD            */
+  /* ========================================= */
   .warp-logo {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
     z-index: 10000; opacity: 0; pointer-events: none;
     max-width: 80%; width: 550px; filter: drop-shadow(0 0 50px cyan);
-    /* Efek bouncy/pegas saat muncul */
     transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
   }
-  .warp-logo.show {
-    opacity: 1; transform: translate(-50%, -50%) scale(1);
+  .warp-logo.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+  /* Wadah Pesawat */
+  #spaceship {
+    position: fixed;
+    bottom: -200px; /* Sembunyi di bawah layar */
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    z-index: 10002;
+    transition: bottom 2s ease-out, transform 0.8s ease-in;
+    pointer-events: none;
+    filter: drop-shadow(0 0 15px cyan);
+  }
+  
+  /* Saat pesawat meluncur ke tengah */
+  #spaceship.launch {
+    bottom: 45%; 
+  }
+  
+  /* Saat warp aktif, pesawat melesat ke dalam lorong */
+  #spaceship.hyperspace-jump {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+
+  /* Api Mesin Pesawat */
+  .engine-fire {
+    fill: #ff0055;
+    animation: flicker 0.1s infinite alternate;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  #spaceship.launch .engine-fire { opacity: 1; }
+
+  @keyframes flicker {
+    0% { transform: scaleY(1); opacity: 0.8; }
+    100% { transform: scaleY(1.5); opacity: 1; }
   }
 
   @media screen and (max-width: 768px) {
     .status-bar { flex-direction: column; align-items: center; gap: 5px; font-size: 0.7rem; padding: 5px; }
     nav { top: 50px; padding: 15px 20px; flex-direction: column; gap: 15px; }
-    nav ul { gap: 15px; font-size: 0.85rem; }
     h1 { font-size: 2.2rem; }
-    .creator-card { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
@@ -155,31 +179,15 @@
 
 <img src="logo.png" id="warp-logo" class="warp-logo" alt="Welcome IPS LABX">
 
-<section class="content-section" id="modul">
-  <h2 class="section-title">DATA MODUL IPS</h2>
-  <div class="data-panel">
-    <h3>> CAPAIAN PEMBELAJARAN (FASE D)</h3>
-    <p>Pada akhir fase D, peserta didik memahami ruang letak geografis dan pengaruhnya terhadap kondisi alam, serta kehidupan sosial, ekonomi, dan politik.</p>
-    <h3>> ELEMEN PEMAHAMAN</h3>
-    <ul>
-      <li><strong>Keruangan dan Konektivitas:</strong> Memahami letak geografis, cuaca, iklim, dan dampaknya.</li>
-      <li><strong>Perkembangan Masyarakat:</strong> Mengidentifikasi dinamika sejarah dari masa praaksara hingga era modern.</li>
-      <li><strong>Interaksi Sosial & Ekonomi:</strong> Menganalisis perilaku manusia dalam memenuhi kebutuhan hidup sehari-hari.</li>
-    </ul>
-  </div>
-</section>
-
-<section class="content-section" id="tentang">
-  <h2 class="section-title">IDENTIFIKASI KREATOR</h2>
-  <div class="creator-card">
-    <img src="fotoid.png" alt="Foto Kreator" class="creator-photo">
-    <div class="creator-info">
-      <h3>Anugerah Bhakti Kuncoro</h3>
-      <h4>Peneliti Utama / Web Developer</h4>
-      <p>"Proyek IPS LABX dibangun untuk mengubah paradigma pembelajaran Ilmu Pengetahuan Sosial. Dengan pendekatan gamifikasi dan UI futuristik, saya berharap platform ini dapat meningkatkan minat eksplorasi data keruangan, sejarah, dan sosiologi bagi generasi digital."</p>
-    </div>
-  </div>
-</section>
+<div id="spaceship">
+  <svg viewBox="0 0 100 150" width="100" height="150" xmlns="http://www.w3.org/2000/svg">
+    <polygon class="engine-fire" points="30,120 40,150 45,120" />
+    <polygon class="engine-fire" points="55,120 60,150 70,120" />
+    <polygon points="50,10 0,100 50,80 100,100" fill="#0055ff" opacity="0.8"/>
+    <polygon points="50,0 25,110 50,120 75,110" fill="cyan" />
+    <polygon points="50,25 40,60 50,70 60,60" fill="#ffffff" />
+  </svg>
+</div>
 
 <div class="modal" id="modal">
   <div class="modal-content">
@@ -206,7 +214,7 @@
         <input type="text" id="regNama" placeholder="Nama Lengkap...">
       </div>
       <div class="input-group">
-        <label>> EMAIL / NISN (Gunakan Email)</label>
+        <label>> EMAIL</label>
         <input type="email" id="regEmail" placeholder="email@contoh.com">
       </div>
       <div class="input-group">
@@ -221,25 +229,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ==========================================
-// AUDIO SYSTEM (GITHUB PAGES)
+// AUDIO SYSTEM 
 // ==========================================
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-let githubAudio = new Audio('scfi-click.wav');
-
 function playClickSound() {
-  githubAudio.currentTime = 0; 
-  githubAudio.play().catch(e => {
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
-    osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-    gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
-    osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-  });
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
+  osc.type = 'sine'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+  gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+  osc.connect(gainNode); gainNode.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + 0.1);
 }
 
 function playErrorSound() {
@@ -254,7 +257,7 @@ function playErrorSound() {
 }
 
 document.addEventListener('click', (e) => {
-  playClickSound();
+  if(e.target.tagName !== 'INPUT') { playClickSound(); }
   const ripple = document.createElement('div');
   ripple.className = 'click-ripple';
   ripple.style.left = e.clientX + 'px'; ripple.style.top = e.clientY + 'px';
@@ -266,153 +269,151 @@ let voices = [];
 window.speechSynthesis.onvoiceschanged = () => { voices = window.speechSynthesis.getVoices(); };
 
 // ==========================================
-// 1. LOGIKA UI, JAM & PARTIKEL (EFEK LORONG MAJU / HYPERSPACE)
+// 1. LOGIKA UI & PARTIKEL 3D HD (WARP TUNNEL)
 // ==========================================
 let isAlarmActive = false;
 let isWarping = false; 
-let warpSpeedMultiplier = 0.002; 
+let warpSpeed = 0; 
 
-try {
-  function updateDateTime() {
-    const now = new Date();
-    const time = now.toLocaleTimeString('id-ID', { hour12: false });
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
-    if (isAlarmActive) {
-      document.getElementById('live-datetime').style.color = 'red';
-      document.getElementById('live-datetime').style.textShadow = '0 0 10px red';
-    } else {
-      document.getElementById('live-datetime').style.color = ''; 
-      document.getElementById('live-datetime').style.textShadow = '';
-    }
+function updateDateTime() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('id-ID', { hour12: false });
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = now.getFullYear();
+  document.getElementById('live-datetime').innerText = `${time} | ${day}/${month}/${year}`;
+}
+setInterval(updateDateTime, 1000); updateDateTime();
+
+window.switchTab = function(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
+  if(tabId === 'login') {
+    document.querySelectorAll('.tab-btn')[0].classList.add('active');
+    document.getElementById('form-login').classList.add('active');
+  } else {
+    document.querySelectorAll('.tab-btn')[1].classList.add('active');
+    document.getElementById('form-register').classList.add('active');
   }
-  setInterval(updateDateTime, 1000); updateDateTime();
+};
 
-  window.switchTab = function(tabId) {
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.form-container').forEach(form => form.classList.remove('active'));
-    if(tabId === 'login') {
-      document.querySelectorAll('.tab-btn')[0].classList.add('active');
-      document.getElementById('form-login').classList.add('active');
-    } else {
-      document.querySelectorAll('.tab-btn')[1].classList.add('active');
-      document.getElementById('form-register').classList.add('active');
-    }
-  };
+const modal = document.getElementById("modal");
+document.getElementById("btnMulai").addEventListener("click", () => modal.style.display = "flex");
+document.getElementById("closeModal").addEventListener("click", () => modal.style.display = "none");
 
-  const btnMulai = document.getElementById("btnMulai");
-  const modal = document.getElementById("modal");
-  const closeModal = document.getElementById("closeModal");
-  if(btnMulai) btnMulai.addEventListener("click", () => modal.style.display = "flex");
-  if(closeModal) closeModal.addEventListener("click", () => modal.style.display = "none");
-  window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+// --- FITUR ENTER UNTUK LOGIN & REGISTER ---
+document.getElementById('loginPassword').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') document.getElementById('btnMasukSistem').click();
+});
+document.getElementById('loginEmail').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') document.getElementById('btnMasukSistem').click();
+});
+document.getElementById('regPassword').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') document.getElementById('btnBuatKredensial').click();
+});
 
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  resizeCanvas(); window.addEventListener("resize", resizeCanvas);
+// --- CANVAS 3D ENGINE ---
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resizeCanvas(); window.addEventListener("resize", resizeCanvas);
 
-  let mouse = { x: null, y: null };
-  if (window.innerWidth > 768) {
-    document.addEventListener("mousemove", (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
-    document.addEventListener("mouseleave", () => { mouse.x = null; mouse.y = null; });
-  }
+// Setup Partikel (2D & 3D)
+let normalParticles = [];
+let warpStars = [];
+let maxDepth = 2000;
 
-  let particles = [];
-  let particleCount = window.innerWidth < 768 ? 80 : 250; 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, z: Math.random() * 2, vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5 });
-  }
+for (let i = 0; i < 150; i++) {
+  normalParticles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 1.5, vy: (Math.random() - 0.5) * 1.5 });
+}
+// Generate Bintang 3D untuk Lorong Warp
+for(let i = 0; i < 500; i++) {
+  warpStars.push({
+    x: (Math.random() - 0.5) * 3000, 
+    y: (Math.random() - 0.5) * 3000, 
+    z: Math.random() * maxDepth
+  });
+}
 
-  function animate() {
-    if(isWarping) {
-        ctx.fillStyle = "rgba(2, 6, 23, 0.2)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        warpSpeedMultiplier += 0.003; // Akselerasi kecepatan ditarik ke depan
-    } else { 
-        ctx.clearRect(0, 0, canvas.width, canvas.height); 
-    }
+function animate() {
+  if (isWarping) {
+    // EFEK HD 3D LORONG (WARP TUNNEL)
+    warpSpeed += 1.5; // Akselerasi melesat
+    ctx.fillStyle = "rgba(0, 5, 20, 0.4)"; // Efek jejak blur
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let centerX = canvas.width / 2; let centerY = canvas.height / 2;
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+    let fov = canvas.width; // Field of View
 
-    for (let i = 0; i < particles.length; i++) {
-      let p = particles[i];
-      if (isWarping) {
-        // MATEMATIKA HYPERSPACE (DITARIK KE DEPAN/OUTWARD)
-        let dx = p.x - centerX;
-        let dy = p.y - centerY;
-        
-        // Mencegah partikel nyangkut tepat di titik 0,0
-        if (dx === 0 && dy === 0) { dx = (Math.random() - 0.5); dy = (Math.random() - 0.5); }
-        
-        let dist = Math.sqrt(dx * dx + dy * dy);
-        
-        let newX = p.x + dx * warpSpeedMultiplier;
-        let newY = p.y + dy * warpSpeedMultiplier;
+    for (let star of warpStars) {
+      star.z -= warpSpeed;
 
-        ctx.beginPath(); 
-        ctx.moveTo(p.x, p.y); 
-        ctx.lineTo(newX, newY); 
-        
-        // Garis makin tebal saat mendekati pinggir layar
-        ctx.lineWidth = Math.min(6, dist * 0.015); 
-        ctx.strokeStyle = "rgba(0, 255, 255, 0.9)"; 
-        ctx.stroke();
-
-        p.x = newX; 
-        p.y = newY;
-
-        // Kalau partikel keluar layar, tembak lagi dari titik tengah (sedikit acak biar natural)
-        if(p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
-            p.x = centerX + (Math.random() - 0.5) * 20; 
-            p.y = centerY + (Math.random() - 0.5) * 20; 
-        }
-      } else {
-        // ANIMASI PARTIKEL NORMAL EFEK JARAK/GABUNGAN
-        p.x += p.vx; p.y += p.vy;
-        let distMouse = 1000; 
-        if (mouse.x !== null && mouse.y !== null) {
-          let dxMouse = p.x - mouse.x; let dyMouse = p.y - mouse.y;
-          distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-          if (distMouse < 120) { p.x += (mouse.x - p.x) * 0.03; p.y += (mouse.y - p.y) * 0.03; }
-        }
-        if (distMouse < 150) {
-          for (let j = i; j < particles.length; j++) {
-            let p2 = particles[j];
-            let dx = p.x - p2.x; let dy = p.y - p2.y; let dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 90) {
-              ctx.beginPath();
-              ctx.strokeStyle = isAlarmActive ? `rgba(255, 0, 0, ${(1 - dist / 90) * 0.8})` : `rgba(0, 255, 255, ${(1 - dist / 90) * 0.8})`; 
-              ctx.lineWidth = 1; ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
-            }
-          }
-          ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); 
-          ctx.fillStyle = isAlarmActive ? "rgba(255, 100, 100, 0.8)" : "white"; ctx.fill();
-        } else {
-          ctx.beginPath(); ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2); 
-          ctx.fillStyle = isAlarmActive ? "rgba(255, 0, 0, 0.4)" : "rgba(0, 255, 255, 0.4)"; ctx.fill();
-        }
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      // Jika bintang sudah melewati layar/kamera, kembalikan ke ujung lorong
+      if (star.z <= 1) {
+        star.z = maxDepth;
+        star.x = (Math.random() - 0.5) * 3000;
+        star.y = (Math.random() - 0.5) * 3000;
       }
+
+      // Proyeksi 3D ke 2D (Matematika Perspektif)
+      let scale = fov / star.z;
+      let x2d = star.x * scale + centerX;
+      let y2d = star.y * scale + centerY;
+
+      // Hitung posisi sebelumnya untuk menggambar garis jejak cahaya
+      let prevScale = fov / (star.z + warpSpeed * 0.8);
+      let px2d = star.x * prevScale + centerX;
+      let py2d = star.y * prevScale + centerY;
+
+      ctx.beginPath();
+      ctx.moveTo(px2d, py2d);
+      ctx.lineTo(x2d, y2d);
+      
+      // Bintang di ujung lorong meredup, saat mendekat makin terang dan tebal
+      let intensity = 1 - (star.z / maxDepth);
+      ctx.strokeStyle = `rgba(0, 255, 255, ${intensity})`;
+      ctx.lineWidth = intensity * 4;
+      ctx.stroke();
     }
-    requestAnimationFrame(animate);
+  } else {
+    // ANIMASI PARTIKEL NORMAL EFEK JARING
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < normalParticles.length; i++) {
+      let p = normalParticles[i];
+      p.x += p.vx; p.y += p.vy;
+
+      for (let j = i + 1; j < normalParticles.length; j++) {
+        let p2 = normalParticles[j];
+        let dx = p.x - p2.x; let dy = p.y - p2.y; let dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.strokeStyle = isAlarmActive ? `rgba(255, 0, 0, ${(1 - dist / 100) * 0.5})` : `rgba(0, 255, 255, ${(1 - dist / 100) * 0.5})`; 
+          ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
+        }
+      }
+      ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); 
+      ctx.fillStyle = isAlarmActive ? "red" : "rgba(0, 255, 255, 0.8)"; ctx.fill();
+      
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    }
   }
-  animate();
-} catch (e) { console.error("Error pada Logika UI:", e); }
+  requestAnimationFrame(animate);
+}
+animate();
 
 // ==========================================
-// 2. SISTEM DATABASE SUPABASE & LOGIN SUCCESS
+// 2. SISTEM SUPABASE & LOGIC KEBERHASILAN
 // ==========================================
 try {
-  if (typeof window.supabase === 'undefined') { throw new Error("Library gagal dimuat."); }
   const supabaseUrl = 'https://gbtlnrxugoazovipynrx.supabase.co'; 
   const supabaseKey = 'sb_publishable_W4MZhjwab667I1yLZ57R-Q_lQRBPaYy';
   const dbClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
   const btnBuatKredensial = document.getElementById("btnBuatKredensial");
   const btnMasukSistem = document.getElementById("btnMasukSistem");
+  const spaceship = document.getElementById("spaceship");
 
   if (btnBuatKredensial) {
     btnBuatKredensial.addEventListener("click", async () => {
@@ -420,6 +421,7 @@ try {
       const email = document.getElementById("regEmail").value;
       const password = document.getElementById("regPassword").value;
       if(!email || !password || !nama) return alert("Harap isi semua data!");
+      
       btnBuatKredensial.innerText = "Mendaftarkan...";
       const { data, error } = await dbClient.auth.signUp({ email: email, password: password, options: { data: { full_name: nama } } });
       if (error) alert("GAGAL: " + error.message);
@@ -442,6 +444,7 @@ try {
       const { data, error } = await dbClient.auth.signInWithPassword({ email: email, password: password });
 
       if (error) {
+        // --- JIKA GAGAL: ALARM ---
         document.getElementById("modal").style.display = "none";
         isAlarmActive = true; document.body.classList.add('system-alarm'); 
         playErrorSound();
@@ -451,51 +454,47 @@ try {
         }, 3000);
 
       } else {
+        // --- JIKA BERHASIL: SEQUENCES WARP ---
         btnMasukSistem.innerText = "AKSES DITERIMA...";
         document.getElementById("modal").style.display = "none";
         
-        // MULAI EFEK HYPERSPACE
-        isWarping = true; 
-        
-        // Fade-out elemen lain agar logo dan warp lebih mencolok
+        // 1. Sembunyikan semua elemen teks
         document.querySelector('nav').style.opacity = '0';
         document.querySelector('.hero').style.opacity = '0';
-        document.querySelectorAll('.content-section').forEach(el => el.style.opacity = '0');
+        document.body.style.overflow = 'hidden'; 
         
-        const kalimatJP = `アイピーエス ラボ エックス へ ようこそ。ワープドライブを起動します。`;
-        const robotVoice = new SpeechSynthesisUtterance(kalimatJP);
-        
-        // SETINGAN SUARA ALA MIKASA ACKERMAN
-        // Datar (pitch direndahkan), dingin, tempo pelan
-        robotVoice.lang = 'ja-JP'; 
-        robotVoice.pitch = 0.65; 
-        robotVoice.rate = 0.75;  
-
+        // 2. Mainkan Suara Robot Jepang
+        const robotVoice = new SpeechSynthesisUtterance(`アイピーエス ラボ エックス へ ようこそ。ワープドライブを起動します。`);
+        robotVoice.lang = 'ja-JP'; robotVoice.pitch = 0.65; robotVoice.rate = 0.75;  
         if (voices.length === 0) voices = window.speechSynthesis.getVoices();
-        
-        // Mencari suara wanita Jepang yang paling natural (biasanya Google Japanese Female)
-        const jpFemaleVoice = voices.find(voice => 
-          voice.lang.includes('ja') && 
-          (voice.name.includes('Google') || voice.name.includes('Female') || voice.name.includes('Kyoko') || voice.name.includes('Haruka') || voice.name.includes('Nanami') || voice.name.includes('Ayumi'))
-        );
-        if (jpFemaleVoice) robotVoice.voice = jpFemaleVoice;
-        
+        const jpVoice = voices.find(v => v.lang.includes('ja') && (v.name.includes('Female') || v.name.includes('Google')));
+        if (jpVoice) robotVoice.voice = jpVoice;
         window.speechSynthesis.speak(robotVoice);
 
-        // Munculkan Logo dengan efek Pop-Up setelah 1 detik
+        // 3. Panggil Pesawat ke Tengah (Launch)
+        setTimeout(() => {
+          spaceship.classList.add('launch');
+        }, 500);
+
+        // 4. Aktifkan Warp Drive dan lesatkan pesawat!
+        setTimeout(() => {
+          isWarping = true; // Canvas berubah 3D
+          spaceship.classList.add('hyperspace-jump'); // Pesawat melesat mengecil
+        }, 3000);
+
+        // 5. Munculkan Logo X
         setTimeout(() => {
             document.getElementById('warp-logo').classList.add('show');
-        }, 1000);
+        }, 4000);
 
-        // Redirect ke dashboard setelah 5 detik
+        // 6. Pindah Halaman
         setTimeout(() => { 
             window.location.href = "dashboard.html"; 
-        }, 5000); 
+        }, 6500); 
       }
     });
   }
-} catch (err) { console.error("Supabase tidak aktif:", err.message); }
+} catch (err) { console.error("Supabase Error:", err.message); }
 </script>
-
 </body>
 </html>
